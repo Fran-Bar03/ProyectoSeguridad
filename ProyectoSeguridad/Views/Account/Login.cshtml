@@ -1,0 +1,211 @@
+﻿@model DTOs.Inicio.LoginDto
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="row justify-content-center min-vh-80 align-items-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4 p-md-5">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <div class="mb-3">
+                        <i class="bi bi-shield-lock-fill text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h1 class="h3 fw-bold mb-2">Iniciar Sesión</h1>
+                    <p class="text-muted">Accede a tu cuenta segura</p>
+                </div>
+
+                <!-- Mensajes de redirección -->
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0"></i>
+                        <div>@ViewBag.Message</div>
+                    </div>
+                }
+
+                <!-- AÑADE ESTO PARA MOSTRAR ERRORES DEL MODELSTATE CON SALTOS DE LÍNEA -->
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger mb-4">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-octagon-fill me-2"></i>Error de Autenticación
+                        </h5>
+                        <div class="mb-0">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <!-- Divide el mensaje por saltos de línea -->
+                                var mensajeConSaltos = error.ErrorMessage;
+                                if (!string.IsNullOrEmpty(mensajeConSaltos))
+                                {
+                                    <!-- Reemplazar Environment.NewLine por <br> para HTML -->
+                                    var mensajeHtml = mensajeConSaltos.Replace("\r\n", "<br>").Replace("\n", "<br>");
+
+                                    <!-- Mostrar cada línea -->
+                                    <div class="error-message">@Html.Raw(mensajeHtml)</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Formulario -->
+                <form asp-action="Login" method="post" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label fw-semibold">
+                            <i class="bi bi-envelope-fill me-1"></i>Correo Electrónico
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-at text-muted"></i>
+                            </span>
+                            <input asp-for="Email" class="form-control"
+                                   placeholder="usuario@ejemplo.com" required>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Contraseña CON VALIDACIÓN DE 6 CARACTERES -->
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label fw-semibold">
+                            <i class="bi bi-key-fill me-1"></i>Contraseña
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input asp-for="Password" type="password" class="form-control"
+                                   placeholder="••••••••" required
+                                   minlength="6" maxlength="100"
+                                   data-val="true"
+                                   data-val-length="La contraseña debe tener al menos 6 caracteres"
+                                   data-val-length-min="6"
+                                   data-val-length-max="100">
+                            <button class="btn btn-outline-secondary" type="button"
+                                    id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>Mínimo 6 caracteres
+                        </div>
+                    </div>
+
+                    <!-- Botón Submit -->
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                        </button>
+                    </div>
+
+                    <!-- Enlace a Registro -->
+                    <div class="text-center pt-3 border-top">
+                        <p class="mb-0">
+                            ¿No tienes cuenta?
+                            <a asp-action="Registro" class="text-decoration-none fw-semibold">
+                                Regístrate aquí
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Seguridad -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h6 class="card-title fw-semibold mb-3">
+                    <i class="bi bi-shield-check text-success me-2"></i>
+                    Medidas de Seguridad
+                </h6>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="small">Autenticación JWT</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="small">Cookies Seguras</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="small">Anti Fuerza Bruta</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <span class="small">HTTPS Forzado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword')?.addEventListener('click', function() {
+            const passwordInput = document.querySelector('input[name="Password"]');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Validación Bootstrap y longitud mínima personalizada
+        (function () {
+            'use strict'
+
+            // Agregar validación personalizada para longitud mínima
+            const passwordField = document.querySelector('input[name="Password"]');
+            if (passwordField) {
+                passwordField.addEventListener('input', function() {
+                    if (this.value.length < 6 && this.value.length > 0) {
+                        this.setCustomValidity('La contraseña debe tener al menos 6 caracteres');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        // Validar longitud mínima de contraseña
+                        const password = form.querySelector('input[name="Password"]');
+                        if (password && password.value.length < 6) {
+                            password.setCustomValidity('La contraseña debe tener al menos 6 caracteres');
+                        }
+
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}
