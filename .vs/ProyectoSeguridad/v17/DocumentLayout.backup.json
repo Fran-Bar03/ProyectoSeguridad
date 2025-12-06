@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\global.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\global.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\railway.toml||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\railway.toml||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
@@ -102,6 +106,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "global.json",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\global.json",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\global.json",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\global.json",
+              "RelativeToolTip": "ProyectoSeguridad\\global.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-06T04:32:57.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "railway.toml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\railway.toml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\railway.toml",
@@ -114,7 +131,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Program.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Program.cs",
@@ -122,12 +139,11 @@
               "RelativeToolTip": "ProyectoSeguridad\\Program.cs",
               "ViewState": "AgIAAEgAAAAAAAAAAAAAAGAAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T21:43:21.891Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T21:43:21.891Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Controllers\\AccountController.cs",
@@ -139,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "JwtService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\JwtService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\JwtService.cs",
@@ -151,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Properties\\launchSettings.json",
@@ -163,7 +179,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "secrets.json",
               "DocumentMoniker": "C:\\Users\\Hachi\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json",
               "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json",
@@ -175,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "TokenInfoViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\DTOs\\Inicio\\TokenInfoViewModel.cs",
               "RelativeDocumentMoniker": "DTOs\\Inicio\\TokenInfoViewModel.cs",
@@ -187,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "JwtMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\JwtMiddleware.cs",
               "RelativeDocumentMoniker": "Data\\Middleware\\JwtMiddleware.cs",
@@ -199,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "EncryptionService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\EncryptionService.cs",
@@ -211,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "EncriptacionController.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\EncriptacionController.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Controllers\\EncriptacionController.cs",
@@ -223,7 +239,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\.gitignore",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\.gitignore",
@@ -235,7 +251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "DatabaseService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\DatabaseService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\DatabaseService.cs",
@@ -247,7 +263,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "SecurityHeadersMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\SecurityHeadersMiddleware.cs",
               "RelativeDocumentMoniker": "Data\\Middleware\\SecurityHeadersMiddleware.cs",
@@ -259,7 +275,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\AuthService.cs",
@@ -271,7 +287,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Login.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Account\\Login.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Account\\Login.cshtml",
@@ -283,7 +299,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Registro.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Account\\Registro.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Account\\Registro.cshtml",
@@ -295,7 +311,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "VerToken.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Account\\VerToken.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Account\\VerToken.cshtml",
@@ -307,7 +323,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "Desencriptar.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
@@ -319,7 +335,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "Encriptar.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
@@ -331,7 +347,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
@@ -343,7 +359,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\_ViewImports.cshtml",
@@ -355,7 +371,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\_ViewStart.cshtml",
