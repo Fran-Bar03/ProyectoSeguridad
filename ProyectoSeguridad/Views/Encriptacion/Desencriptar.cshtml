@@ -341,21 +341,63 @@
             window.location.href = '@Url.Action("Desencriptar")';
         }
 
-        // Función para copiar mensaje desencriptado
+        // ======================================================================
+        // FUNCIÓN DE COPIADO SIMPLIFICADA
+        // ======================================================================
         function copyToClipboard(elementId) {
             const text = document.getElementById(elementId).value;
+
+            // Usar la API moderna de Clipboard
             navigator.clipboard.writeText(text).then(() => {
                 // Notificación simple
                 const btn = document.querySelector(`[onclick*="${elementId}"]`);
                 if (btn) {
                     const originalHTML = btn.innerHTML;
+                    const originalClass = btn.className;
+
+                    // Cambiar a verde con palomita
                     btn.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
-                    btn.classList.add('btn-success');
+                    btn.className = originalClass + ' btn-success';
 
                     setTimeout(() => {
                         btn.innerHTML = originalHTML;
-                        btn.classList.remove('btn-success');
+                        btn.className = originalClass;
                     }, 2000);
+                }
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+
+                // Fallback para navegadores antiguos
+                try {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-999999px';
+                    textArea.style.top = '-999999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+
+                    if (successful) {
+                        const btn = document.querySelector(`[onclick*="${elementId}"]`);
+                        if (btn) {
+                            const originalHTML = btn.innerHTML;
+                            const originalClass = btn.className;
+
+                            btn.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+                            btn.className = originalClass + ' btn-success';
+
+                            setTimeout(() => {
+                                btn.innerHTML = originalHTML;
+                                btn.className = originalClass;
+                            }, 2000);
+                        }
+                    }
+                } catch (fallbackErr) {
+                    console.error('Fallback también falló:', fallbackErr);
                 }
             });
         }
@@ -434,13 +476,13 @@
             </text>
         }
 
-            // INICIALIZAR TOOLTIPS Y ACCORDION (CÓDIGO EXISTENTE)
+            // INICIALIZAR TOOLTIPS Y ACCORDION 
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
-            // Auto-expand textareas al pegar (existente)
+            // Auto-expand textareas al pegar 
             document.querySelector('textarea[name="MensajeEncriptado"]')?.addEventListener('paste', function() {
                 setTimeout(() => this.dispatchEvent(new Event('input')), 10);
             });

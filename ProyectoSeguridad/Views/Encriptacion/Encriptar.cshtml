@@ -409,13 +409,61 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         // ======================================================================
-        // FUNCIONES EXISTENTES 
+        // FUNCIONES EXISTENTES
         // ======================================================================
         function limpiarFormulario() {
             window.location.href = '@Url.Action("Encriptar")';
         }
 
-        // Función para copiar al portapapeles SIN seleccionar el texto
+        // ======================================================================
+        // FUNCIONES DE COPIADO CORREGIDAS
+        // ======================================================================
+
+        // Función para mostrar notificación de copiado
+        function showCopyNotification(message, isError = false) {
+            const notification = document.getElementById('copyNotification');
+
+            // Configurar contenido según tipo
+            if (isError) {
+                notification.className = 'error';
+                notification.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                        <div>
+                            <strong>Error</strong>
+                            <div class="small">${message}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                notification.className = 'success';
+                notification.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <div>
+                            <strong>¡Copiado!</strong>
+                            <div class="small">${message}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Mostrar notificación
+            notification.style.display = 'block';
+            notification.style.opacity = '1';
+            notification.classList.add('show');
+
+            // Ocultar después de 2 segundos
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                    notification.classList.remove('show');
+                }, 300);
+            }, 2000);
+        }
+
+        // Función principal para copiar al portapapeles
         async function copyToClipboard(text, buttonId, successMessage) {
             try {
                 // Método moderno con Clipboard API
@@ -423,7 +471,7 @@
 
                 // Mostrar notificación de éxito
                 showCopyNotification(successMessage);
-                z6zL4EQchLwYY40t8gEOng==
+
                 // Cambiar aspecto del botón temporalmente
                 const button = document.getElementById(buttonId);
                 if (button) {
@@ -488,50 +536,6 @@
             }
         }
 
-        // Función para mostrar notificación de copiado
-        function showCopyNotification(message, isError = false) {
-            const notification = document.getElementById('copyNotification');
-
-            // Configurar contenido según tipo
-            if (isError) {
-                notification.className = 'error';
-                notification.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
-                        <div>
-                            <strong>Error</strong>
-                            <div class="small">${message}</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                notification.className = 'success';
-                notification.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                        <div>
-                            <strong>¡Copiado!</strong>
-                            <div class="small">${message}</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Mostrar notificación
-            notification.style.display = 'block';
-            notification.style.opacity = '1';
-            notification.classList.add('show');
-
-            // Ocultar después de 2 segundos
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                    notification.classList.remove('show');
-                }, 300);
-            }, 2000);
-        }
-
         // ======================================================================
         // PROTECCIÓN CONTRA ABUSO
         // ======================================================================
@@ -558,47 +562,23 @@
                 });
             }
 
-            // PREVENIR MÚLTIPLES COPIAS RÁPIDAS
-            let ultimaCopia = 0; // Timestamp de la última copia
-            const delayMinimoCopias = 1000; // 1 segundo entre copias
-
-            // Configurar eventos para botones de copiar
+            // CONFIGURAR BOTONES DE COPIAR - VERSIÓN SIMPLIFICADA
             const copyMensajeBtn = document.getElementById('copyMensajeBtn');
             const copyLlaveBtn = document.getElementById('copyLlaveBtn');
 
-            function configurarBotonCopiar(boton, elementoId, mensajeExito) {
-                if (boton) {
-                    boton.addEventListener('click', async function() {
-                        const ahora = Date.now();
-
-                        // Verificar si ha pasado el tiempo mínimo desde la última copia
-                        if (ahora - ultimaCopia < delayMinimoCopias) {
-                            // Mostrar advertencia de espera
-                            const textoOriginal = boton.innerHTML;
-                            boton.innerHTML = '<i class="bi bi-hourglass me-2"></i>Espera...';
-                            boton.classList.add('btn-warning');
-                            boton.disabled = true;
-
-                            setTimeout(() => {
-                                boton.innerHTML = textoOriginal;
-                                boton.classList.remove('btn-warning');
-                                boton.disabled = false;
-                            }, 1000);
-                            return;
-                        }
-
-                        // Actualizar timestamp de última copia
-                        ultimaCopia = ahora;
-
-                        // Realizar copia
-                        const texto = document.getElementById(elementoId).value;
-                        await copyToClipboard(texto, boton.id, mensajeExito);
-                    });
-                }
+            if (copyMensajeBtn) {
+                copyMensajeBtn.addEventListener('click', async function() {
+                    const texto = document.getElementById('mensajeEncriptado').value;
+                    await copyToClipboard(texto, 'copyMensajeBtn', 'Mensaje encriptado copiado al portapapeles');
+                });
             }
 
-            configurarBotonCopiar(copyMensajeBtn, 'mensajeEncriptado', 'Mensaje encriptado copiado al portapapeles');
-            configurarBotonCopiar(copyLlaveBtn, 'llaveEncriptacion', 'Llave de encriptación copiada al portapapeles');
+            if (copyLlaveBtn) {
+                copyLlaveBtn.addEventListener('click', async function() {
+                    const texto = document.getElementById('llaveEncriptacion').value;
+                    await copyToClipboard(texto, 'copyLlaveBtn', 'Llave de encriptación copiada al portapapeles');
+                });
+            }
 
             // AUTO-LIMPIEZA DE RESULTADOS DESPUÉS DE 60 SEGUNDOS
         @if (!string.IsNullOrEmpty(Model?.MensajeEncriptado))
@@ -653,13 +633,13 @@
             </text>
         }
 
-            // INICIALIZAR TOOLTIPS 
+            // INICIALIZAR TOOLTIPS
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
-            // AUTO-AJUSTAR TEXTAREAS 
+            // AUTO-AJUSTAR TEXTAREAS
             document.querySelectorAll('.textarea-auto').forEach(textarea => {
                 // Establecer altura inicial
                 textarea.style.height = 'auto';

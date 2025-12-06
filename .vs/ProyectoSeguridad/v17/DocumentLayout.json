@@ -32,7 +32,7 @@
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
               "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
               "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAswBIAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAALEBAAAAAAAAAAAAAK4BAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-12-06T07:09:16.311Z",
               "EditorCaption": ""
@@ -45,7 +45,7 @@
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
               "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
               "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
-              "ViewState": "AgIAAJsBAAAAAAAAAAAAAKkBAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAHIBAAAAAAAAAAAAAI8CAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-12-06T07:09:03.038Z",
               "EditorCaption": ""
@@ -60,8 +60,7 @@
               "RelativeToolTip": "ProyectoSeguridad\\Program.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAAAPUAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T07:08:25.116Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-06T07:08:25.116Z"
             }
           ]
         }
