@@ -3,263 +3,325 @@
     ViewData["Title"] = "Desencriptar Mensaje";
 }
 
-<div class="row g-4">
-    <!-- Columna Principal -->
-    <div class="col-lg-8">
-        <!-- Header -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-            <div class="mb-3 mb-md-0">
-                <h1 class="h2 fw-bold text-primary">
-                    <i class="bi bi-unlock-fill me-2"></i>Desencriptar Mensaje
-                </h1>
-                <p class="text-muted mb-0">Descifra mensajes encriptados con AES-256</p>
-            </div>
-            <div>
-                <a asp-action="Encriptar" class="btn btn-outline-primary">
-                    <i class="bi bi-lock me-2"></i>Ir a Encriptar
-                </a>
-            </div>
-        </div>
+<style>
+    /* Estilos adicionales para protección */
+    .btn-processing {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.65;
+    }
+</style>
 
-        <!-- Mensajes de éxito -->
-        @if (ViewBag.Success != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
-                <i class="bi bi-check-circle-fill me-2 flex-shrink-0"></i>
-                <div>@ViewBag.Success</div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+<div class="container-fluid py-3 py-md-4">
+    <div class="row g-4">
+        <!-- Columna Principal -->
+        <div class="col-12 col-lg-8">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                <div class="text-center text-md-start">
+                    <h1 class="h2 fw-bold text-primary mb-2">
+                        <i class="bi bi-unlock-fill me-2"></i>Desencriptar Mensaje
+                    </h1>
+                    <p class="text-muted mb-0">Descifra mensajes encriptados con AES-256</p>
+                </div>
+                <div class="d-flex flex-column flex-sm-row align-items-center align-items-md-end gap-3">
+                    <span class="badge bg-success rounded-pill px-3 py-2">
+                        <i class="bi bi-shield-check me-1"></i>Seguro
+                    </span>
+                    <span class="badge bg-info rounded-pill px-3 py-2">
+                        <i class="bi bi-shield-lock me-1"></i>Protegido contra abuso
+                    </span>
+                    <!-- BOTÓN AÑADIDO: Ir a Encriptar -->
+                    <a asp-action="Encriptar" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-lock-fill me-2"></i>Ir a Encriptar
+                    </a>
+                </div>
             </div>
-        }
 
-        <!-- Formulario -->
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-body p-4">
-                <form asp-action="Desencriptar" method="post">
-                    @Html.AntiForgeryToken()
+            <!-- Mantener todo el resto del código igual -->
+            <!-- Mensajes de éxito -->
+            @if (ViewBag.Success != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2 flex-shrink-0"></i>
+                    <div>@ViewBag.Success</div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            }
 
-                    <!-- Mensaje Encriptado -->
-                    <div class="mb-4">
-                        <label asp-for="MensajeEncriptado" class="form-label fw-semibold">
-                            <i class="bi bi-file-earmark-lock-fill me-1"></i>Mensaje Encriptado (Base64)
-                        </label>
-                        <textarea asp-for="MensajeEncriptado"
-                                  class="form-control textarea-auto"
-                                  rows="3"
-                                  placeholder="Pega aquí el texto encriptado en formato Base64..."
-                                  style="font-family: 'Courier New', monospace; font-size: 0.9rem;"></textarea>
-                        <span asp-validation-for="MensajeEncriptado" class="text-danger small"></span>
-                        <div class="form-text">
-                            <i class="bi bi-info-circle me-1"></i>Este es el texto que obtuviste al encriptar
+            <!-- Formulario -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <form id="desencriptarForm" asp-action="Desencriptar" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Mensaje Encriptado -->
+                        <div class="mb-4">
+                            <label asp-for="MensajeEncriptado" class="form-label fw-semibold">
+                                <i class="bi bi-file-earmark-lock-fill me-1"></i>Mensaje Encriptado (Base64)
+                            </label>
+                            <textarea asp-for="MensajeEncriptado"
+                                      class="form-control textarea-auto"
+                                      rows="3"
+                                      placeholder="Pega aquí el texto encriptado en formato Base64..."
+                                      style="font-family: 'Courier New', monospace; font-size: 0.9rem;"></textarea>
+                            <span asp-validation-for="MensajeEncriptado" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>Este es el texto que obtuviste al encriptar
+                            </div>
+                        </div>
+
+                        <!-- Llave -->
+                        <div class="mb-4">
+                            <label asp-for="Llave" class="form-label fw-semibold">
+                                <i class="bi bi-key-fill me-1"></i>Llave de Desencriptación
+                            </label>
+                            <textarea asp-for="Llave"
+                                      class="form-control textarea-auto"
+                                      rows="2"
+                                      placeholder="Pega aquí la llave en formato: Key|IV..."
+                                      style="font-family: 'Courier New', monospace; font-size: 0.9rem;"></textarea>
+                            <span asp-validation-for="Llave" class="text-danger small"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>Formato: Key|IV (la misma llave que generaste al encriptar)
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <!-- Botón con ID para control desde JavaScript -->
+                            <button type="submit" id="btnDesencriptar" class="btn btn-primary btn-lg fw-semibold">
+                                <i class="bi bi-unlock me-2"></i>Desencriptar Mensaje
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            @if (!string.IsNullOrEmpty(Model?.MensajeOriginal))
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <h3 class="h5 fw-bold text-success mb-0">
+                            <i class="bi bi-chat-square-text-fill me-2"></i>Mensaje Desencriptado
+                        </h3>
+                        <!-- Información de auto-limpieza -->
+                        @if (Model.Exito)
+                        {
+                            <div class="alert alert-info alert-dismissible fade show small mt-2 mb-0" role="alert">
+                                <i class="bi bi-clock-history me-2"></i>
+                                <strong>Nota:</strong> Los resultados se limpiarán automáticamente en 60 segundos
+                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Texto Original -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="bi bi-chat-left-text-fill me-1"></i>Texto Original
+                            </label>
+                            <div class="input-group">
+                                <textarea id="mensajeOriginal"
+                                          class="form-control bg-light textarea-auto"
+                                          rows="4"
+                                          readonly
+                                          style="font-family: 'Courier New', monospace; font-size: 0.9rem;">@Model.MensajeOriginal</textarea>
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="copyToClipboard('mensajeOriginal')"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Copiar al portapapeles">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="alert @(Model.Exito ? "alert-success" : "alert-danger") d-flex align-items-center" role="alert">
+                            <i class="bi @(Model.Exito ? "bi-check-circle-fill" : "bi-x-circle-fill") me-2 flex-shrink-0"></i>
+                            <div>
+                                @if (Model.Exito)
+                                {
+                                    <strong>¡Éxito! El mensaje se desencripto correctamente.</strong>
+                                }
+                                else
+                                {
+                                    <strong>Error:No se pudo desencriptar el mensaje.</strong>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center" id="actionButtonsContainer">
+                            <button type="button" class="btn btn-outline-primary btn-lg" onclick="limpiarFormulario()">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Nuevo Desencriptado
+                            </button>
                         </div>
                     </div>
-
-                    <!-- Llave -->
-                    <div class="mb-4">
-                        <label asp-for="Llave" class="form-label fw-semibold">
-                            <i class="bi bi-key-fill me-1"></i>Llave de Desencriptación
-                        </label>
-                        <textarea asp-for="Llave"
-                                  class="form-control textarea-auto"
-                                  rows="2"
-                                  placeholder="Pega aquí la llave en formato: Key|IV..."
-                                  style="font-family: 'Courier New', monospace; font-size: 0.9rem;"></textarea>
-                        <span asp-validation-for="Llave" class="text-danger small"></span>
-                        <div class="form-text">
-                            <i class="bi bi-info-circle me-1"></i>Formato: Key|IV (la misma llave que generaste al encriptar)
+                </div>
+            }
+            else if (Model?.Exito == false && (!string.IsNullOrEmpty(Model?.MensajeEncriptado) || !string.IsNullOrEmpty(Model?.Llave)))
+            {
+                <!-- SOLUCIÓN: Solo mostrar error si hay datos en los campos -->
+                <div class="alert alert-danger" role="alert">
+                    <div class="d-flex">
+                        <i class="bi bi-x-circle-fill me-2 flex-shrink-0 mt-1"></i>
+                        <div>
+                            <h5 class="alert-heading">Error de desencriptación</h5>
+                            <p class="mb-2">No se pudo desencriptar el mensaje. Verifica:</p>
+                            <ul class="mb-0">
+                                <li>Que el texto encriptado esté completo</li>
+                                <li>Que la llave sea la correcta (formato: Key|IV)</li>
+                                <li>Que no haya espacios extra en la llave</li>
+                                <li>Que la llave corresponda a este mensaje</li>
+                            </ul>
                         </div>
                     </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
-                            <i class="bi bi-unlock me-2"></i>Desencriptar Mensaje
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            }
         </div>
 
-        <!-- Resultados -->
-        @if (!string.IsNullOrEmpty(Model?.MensajeOriginal))
-        {
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 pb-0">
-                    <h3 class="h5 fw-bold text-success mb-0">
-                        <i class="bi bi-chat-square-text-fill me-2"></i>Mensaje Desencriptado
+        <!-- Sidebar -->
+        <div class="col-12 col-lg-4">
+            <!-- Instrucciones -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="bi bi-question-circle-fill me-2"></i>¿Cómo desencriptar?
                     </h3>
                 </div>
-                <div class="card-body p-4">
-                    <!-- Texto Original -->
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-chat-left-text-fill me-1"></i>Texto Original
-                        </label>
-                        <div class="input-group">
-                            <textarea id="mensajeOriginal"
-                                      class="form-control bg-light textarea-auto"
-                                      rows="4"
-                                      readonly
-                                      style="font-family: 'Courier New', monospace; font-size: 0.9rem;">@Model.MensajeOriginal</textarea>
-                            <button type="button"
-                                    class="btn btn-outline-secondary"
-                                    onclick="copyToClipboard('mensajeOriginal')"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title="Copiar al portapapeles">
-                                <i class="bi bi-clipboard"></i>
-                            </button>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-3">1</span>
+                                <div class="small">Copia el <strong>texto encriptado</strong> completo</div>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Estado -->
-                    <div class="alert @(Model.Exito ? "alert-success" : "alert-danger") d-flex align-items-center" role="alert">
-                        <i class="bi @(Model.Exito ? "bi-check-circle-fill" : "bi-x-circle-fill") me-2 flex-shrink-0"></i>
-                        <div>
-                            @if (Model.Exito)
-                            {
-                                <strong>¡Éxito! El mensaje se desencripto correctamente.</strong>
-                            }
-                            else
-                            {
-                                <strong>Error:No se pudo desencriptar el mensaje.</strong>
-                            }
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-3">2</span>
+                                <div class="small">Copia la <strong>llave completa</strong> (Key|IV)</div>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Botones -->
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        <a asp-action="Encriptar" class="btn btn-success">
-                            <i class="bi bi-lock-fill me-2"></i>Ir a Encriptar
-                        </a>
-                        <button type="button" class="btn btn-outline-primary" onclick="limpiarFormulario()">
-                            <i class="bi bi-arrow-clockwise me-2"></i>Nuevo Desencriptado
-                        </button>
-                    </div>
-                </div>
-            </div>
-        }
-        else if (Model?.Exito == false && (!string.IsNullOrEmpty(Model?.MensajeEncriptado) || !string.IsNullOrEmpty(Model?.Llave)))
-        {
-            <!-- ===== SOLUCIÓN: Solo mostrar error si hay datos en los campos ===== -->
-            <!-- Esto significa que hubo un intento real de desencriptación -->
-            <div class="alert alert-danger" role="alert">
-                <div class="d-flex">
-                    <i class="bi bi-x-circle-fill me-2 flex-shrink-0 mt-1"></i>
-                    <div>
-                        <h5 class="alert-heading">Error de desencriptación</h5>
-                        <p class="mb-2">No se pudo desencriptar el mensaje. Verifica:</p>
-                        <ul class="mb-0">
-                            <li>Que el texto encriptado esté completo</li>
-                            <li>Que la llave sea la correcta (formato: Key|IV)</li>
-                            <li>Que no haya espacios extra en la llave</li>
-                            <li>Que la llave corresponda a este mensaje</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-
-    <!-- Sidebar -->
-    <div class="col-lg-4">
-        <!-- Instrucciones -->
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0">
-                <h3 class="h5 fw-bold mb-0">
-                    <i class="bi bi-question-circle-fill me-2"></i>¿Cómo desencriptar?
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle me-3">1</span>
-                            <div class="small">Copia el <strong>texto encriptado</strong> completo</div>
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-3">3</span>
+                                <div class="small">Pega ambos en los campos correspondientes</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle me-3">2</span>
-                            <div class="small">Copia la <strong>llave completa</strong> (Key|IV)</div>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle me-3">3</span>
-                            <div class="small">Pega ambos en los campos correspondientes</div>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle me-3">4</span>
-                            <div class="small">Haz clic en "Desencriptar Mensaje"</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="alert alert-info small mt-3 mb-0">
-                    <i class="bi bi-lightbulb-fill me-2"></i>
-                    <strong>Tip:</strong> Usa los botones
-                    <i class="bi bi-clipboard"></i> para copiar fácilmente
-                </div>
-            </div>
-        </div>
-
-        <!-- Consejos -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0">
-                <h3 class="h5 fw-bold mb-0">
-                    <i class="bi bi-lightbulb-fill me-2"></i>Consejos
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="accordion" id="accordionTips">
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#tip1">
-                                <i class="bi bi-clipboard-check me-2"></i>
-                                Verifica el formato
-                            </button>
-                        </h2>
-                        <div id="tip1" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionTips">
-                            <div class="accordion-body small">
-                                La llave debe tener exactamente el formato: <code>Key|IV</code>
-                                donde ambos están en Base64 y separados por un pipe (|).
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-3">4</span>
+                                <div class="small">Haz clic en "Desencriptar Mensaje"</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#tip2">
-                                <i class="bi bi-files me-2"></i>
-                                Llave única por mensaje
-                            </button>
-                        </h2>
-                        <div id="tip2" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionTips">
-                            <div class="accordion-body small">
-                                Cada mensaje encriptado genera una llave única.
-                                No intentes usar llaves de otros mensajes.
+                    <div class="alert alert-info small mt-3 mb-0">
+                        <i class="bi bi-lightbulb-fill me-2"></i>
+                        <strong>Tip:</strong> Usa los botones
+                        <i class="bi bi-clipboard"></i> para copiar fácilmente
+                    </div>
+                </div>
+            </div>
+
+            <!-- Protecciones activas -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="bi bi-shield-check me-2"></i>Protecciones
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 g-2">
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Rate Limiting:</strong> 10 desencriptaciones/minuto
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Anti-doble clic:</strong> Botón se deshabilita
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Auto-limpieza:</strong> Resultados en 60 segundos
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#tip3">
-                                <i class="bi bi-safe me-2"></i>
-                                Almacenamiento seguro
-                            </button>
-                        </h2>
-                        <div id="tip3" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionTips">
-                            <div class="accordion-body small">
-                                Guarda la llave en un lugar seguro. Sin ella,
-                                el mensaje es irrecuperable.
+            <!-- Consejos -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="bi bi-lightbulb-fill me-2"></i>Consejos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="accordionTips">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#tip1">
+                                    <i class="bi bi-clipboard-check me-2"></i>
+                                    Verifica el formato
+                                </button>
+                            </h2>
+                            <div id="tip1" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionTips">
+                                <div class="accordion-body small">
+                                    La llave debe tener exactamente el formato: <code>Key|IV</code>
+                                    donde ambos están en Base64 y separados por un pipe (|).
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#tip2">
+                                    <i class="bi bi-files me-2"></i>
+                                    Llave única por mensaje
+                                </button>
+                            </h2>
+                            <div id="tip2" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionTips">
+                                <div class="accordion-body small">
+                                    Cada mensaje encriptado genera una llave única.
+                                    No intentes usar llaves de otros mensajes.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#tip3">
+                                    <i class="bi bi-safe me-2"></i>
+                                    Almacenamiento seguro
+                                </button>
+                            </h2>
+                            <div id="tip3" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionTips">
+                                <div class="accordion-body small">
+                                    Guarda la llave en un lugar seguro. Sin ella,
+                                    el mensaje es irrecuperable.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -272,19 +334,113 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // ======================================================================
+        // FUNCIONES PRINCIPALES
+        // ======================================================================
         function limpiarFormulario() {
             window.location.href = '@Url.Action("Desencriptar")';
         }
 
-        // Inicializar tooltips y accordion
+        // Función para copiar mensaje desencriptado
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).value;
+            navigator.clipboard.writeText(text).then(() => {
+                // Notificación simple
+                const btn = document.querySelector(`[onclick*="${elementId}"]`);
+                if (btn) {
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+                    btn.classList.add('btn-success');
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('btn-success');
+                    }, 2000);
+                }
+            });
+        }
+
+        // ======================================================================
+        // PROTECCIÓN CONTRA ABUSO
+        // ======================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Tooltips
+            // DESHABILITAR DOBLE CLIC EN FORMULARIO DE DESENCRIPTACIÓN
+            const form = document.getElementById('desencriptarForm');
+            const submitBtn = document.getElementById('btnDesencriptar');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function(e) {
+                    // Solo deshabilitar si el botón no está ya deshabilitado
+                    if (!submitBtn.disabled) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Procesando...';
+                        submitBtn.classList.add('btn-processing');
+
+                        // Re-habilitar después de 5 segundos (por si hay error)
+                        setTimeout(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="bi bi-unlock me-2"></i>Desencriptar Mensaje';
+                            submitBtn.classList.remove('btn-processing');
+                        }, 5000);
+                    }
+                });
+            }
+
+            // AUTO-LIMPIEZA DE RESULTADOS DESPUÉS DE 60 SEGUNDOS (SOLO SI EXITOSO)
+        @if (!string.IsNullOrEmpty(Model?.MensajeOriginal) && Model.Exito)
+        {
+            <text>
+                        // Configurar temporizador para limpieza automática
+                        const tiempoAutoLimpieza = 60000; // 60 segundos
+                        let timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+
+                        // Función para limpieza automática
+                        function limpiarAutomaticamente() {
+                            // Verificar si el usuario está interactuando con el resultado
+                            const estaInteractuando =
+                                document.querySelector('#mensajeOriginal:hover') ||
+                                (document.activeElement &&
+                                 document.activeElement.id === 'mensajeOriginal');
+
+                            if (!estaInteractuando) {
+                                // Mostrar notificación antes de limpiar
+                                const notificacion = document.createElement('div');
+                                notificacion.className = 'alert alert-warning alert-dismissible fade show position-fixed bottom-0 start-50 translate-middle-x mb-3 z-3';
+                                notificacion.innerHTML = `
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    Los resultados han sido limpiados automáticamente.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                `;
+                                document.body.appendChild(notificacion);
+
+                                // Redirigir para limpiar formulario
+                                setTimeout(() => {
+                                    window.location.href = '@Url.Action("Desencriptar")';
+                                }, 1500);
+                            } else {
+                                // Reiniciar timer si el usuario está interactuando
+                                clearTimeout(timerAutoLimpieza);
+                                timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+                            }
+                        }
+
+                        // Resetear timer cuando el usuario interactúe con el mensaje
+                        ['click', 'mouseenter', 'focus'].forEach(evento => {
+                            document.getElementById('mensajeOriginal')?.addEventListener(evento, () => {
+                                clearTimeout(timerAutoLimpieza);
+                                timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+                            });
+                        });
+            </text>
+        }
+
+            // INICIALIZAR TOOLTIPS Y ACCORDION (CÓDIGO EXISTENTE)
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
-            // Auto-expand textareas al pegar
+            // Auto-expand textareas al pegar (existente)
             document.querySelector('textarea[name="MensajeEncriptado"]')?.addEventListener('paste', function() {
                 setTimeout(() => this.dispatchEvent(new Event('input')), 10);
             });

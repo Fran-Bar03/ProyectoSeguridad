@@ -4,6 +4,7 @@ using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Data.Services;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,60 @@ var tieneLocal = !string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]);
 
 Console.WriteLine($"Railway configurado: {(tieneRailway ? "SÍ" : "NO")}");
 Console.WriteLine($"Local configurado: {(tieneLocal ? "SÍ" : "NO")}");
+
+// ======================================================================
+// 3. CONFIGURAR RATE LIMITING (NUEVO - PROTECCIÓN CONTRA ABUSO/DDoS)
+// ======================================================================
+// Protege contra ataques de fuerza bruta y abuso en endpoints críticos
+// Limita: 15 peticiones por minuto por IP, 10 para encriptación/desencriptación
+builder.Services.AddRateLimiter(options =>
+{
+    // Límite global por dirección IP
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        // Obtener IP del cliente (o "unknown" si no se puede determinar)
+        var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var ruta = httpContext.Request.Path.ToString().ToLowerInvariant();
+
+        // Límites más estrictos para operaciones de encriptación/desencriptación (POST)
+        if (ruta.Contains("/encriptacion") && httpContext.Request.Method == "POST")
+        {
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: $"{ipAddress}_encriptacion", // Clave única por IP + operación
+                factory: partition => new FixedWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,          // Recarga automática de límites
+                    PermitLimit = 10,                  // 10 operaciones por minuto
+                    Window = TimeSpan.FromMinutes(1),  // Ventana de 1 minuto
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst, // Procesar en orden
+                    QueueLimit = 2                     // Máximo 2 peticiones en cola
+                });
+        }
+
+        // Límite general para todas las demás rutas
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ipAddress, // Clave por IP
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 15,       // 15 peticiones por minuto
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 3          // Máximo 3 peticiones en cola
+            });
+    });
+
+    // Configurar respuesta personalizada para errores 429 (Too Many Requests)
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429; // Status Code 429: Too Many Requests
+        await context.HttpContext.Response.WriteAsync(
+            "⚠️ Demasiadas peticiones. Por favor, espera un minuto antes de intentar nuevamente.",
+            cancellationToken: token);
+    };
+
+    Console.WriteLine("✓ Rate Limiting configurado: 10 encriptaciones/min, 15 peticiones/min");
+});
 
 // ======================================================================
 // REGISTRAR SERVICIOS DE LA APLICACIÓN
@@ -156,6 +211,11 @@ app.UseDefaultFiles();
 
 //  Configurar enrutamiento
 app.UseRouting();
+
+// ======================================================================
+// HABILITAR RATE LIMITING (NUEVO - debe ir después de UseRouting)
+// ======================================================================
+app.UseRateLimiter();
 
 // Middleware personalizado: Headers de seguridad
 app.UseMiddleware<SecurityHeadersMiddleware>();

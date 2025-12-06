@@ -59,6 +59,14 @@
         resize: vertical;
     }
 
+    /* Estilo para botón deshabilitado durante procesamiento */
+    .btn-processing {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        cursor: not-allowed !important;
+        opacity: 0.65;
+    }
+
     /* Ajustes para móviles */
     @@media (max-width: 768px) {
         .card-body {
@@ -93,6 +101,7 @@
         <!-- Columna Principal -->
         <div class="col-12 col-lg-8">
             <!-- Header - RESPONSIVO -->
+            <!-- MODIFICADO: Se añadió botón "Ir a Desencriptar" -->
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                 <div class="text-center text-md-start">
                     <h1 class="h2 fw-bold text-primary mb-2">
@@ -104,9 +113,17 @@
                     <span class="badge bg-success rounded-pill px-3 py-2">
                         <i class="bi bi-shield-check me-1"></i>Seguro
                     </span>
+                    <span class="badge bg-info rounded-pill px-3 py-2">
+                        <i class="bi bi-shield-lock me-1"></i>Protegido contra abuso
+                    </span>
+                    <!-- BOTÓN AÑADIDO: Ir a Desencriptar -->
+                    <a asp-action="Desencriptar" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-unlock-fill me-2"></i>Ir a Desencriptar
+                    </a>
                 </div>
             </div>
 
+            <!-- Mantener todo el resto del código igual -->
             <!-- Mensajes de éxito -->
             @if (ViewBag.Success != null)
             {
@@ -120,7 +137,7 @@
             <!-- Formulario - RESPONSIVO -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-3 p-md-4">
-                    <form asp-action="Encriptar" method="post">
+                    <form id="encriptarForm" asp-action="Encriptar" method="post">
                         @Html.AntiForgeryToken()
 
                         <div class="mb-4">
@@ -138,7 +155,8 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                            <!-- Botón con ID para controlar desde JavaScript -->
+                            <button type="submit" id="btnEncriptar" class="btn btn-primary btn-lg fw-semibold">
                                 <i class="bi bi-lock me-2"></i>Encriptar Mensaje
                             </button>
                         </div>
@@ -154,6 +172,12 @@
                         <h3 class="h5 fw-bold text-success mb-3">
                             <i class="bi bi-check-circle-fill me-2"></i>Mensaje Encriptado
                         </h3>
+                        <!-- Información de auto-limpieza -->
+                        <div class="alert alert-info alert-dismissible fade show small mt-2 mb-0" role="alert">
+                            <i class="bi bi-clock-history me-2"></i>
+                            <strong>Nota:</strong> Los resultados se limpiarán automáticamente en 60 segundos
+                            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+                        </div>
                     </div>
                     <div class="card-body p-3 p-md-4">
                         <!-- Texto Encriptado -->
@@ -222,10 +246,7 @@
                         </div>
 
                         <!-- Botones de Acción - RESPONSIVOS -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <a asp-action="Desencriptar" class="btn btn-success btn-lg">
-                                <i class="bi bi-unlock-fill me-2"></i>Ir a Desencriptar
-                            </a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center" id="actionButtonsContainer">
                             <button type="button" class="btn btn-outline-primary btn-lg" onclick="limpiarFormulario()">
                                 <i class="bi bi-arrow-clockwise me-2"></i>Nuevo Mensaje
                             </button>
@@ -298,6 +319,51 @@
                 </div>
             </div>
 
+            <!-- Protección contra abuso -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="bi bi-shield-check me-2"></i>Protecciones Activas
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 g-2">
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Rate Limiting:</strong> 10 encriptaciones/minuto
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Anti-doble clic:</strong> Botón se deshabilita
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Auto-limpieza:</strong> Resultados en 60 segundos
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <div class="small">
+                                    <strong>Delay entre copias:</strong> 1 segundo mínimo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Estadísticas -->
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0">
@@ -342,6 +408,9 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // ======================================================================
+        // FUNCIONES EXISTENTES 
+        // ======================================================================
         function limpiarFormulario() {
             window.location.href = '@Url.Action("Encriptar")';
         }
@@ -354,7 +423,7 @@
 
                 // Mostrar notificación de éxito
                 showCopyNotification(successMessage);
-
+                z6zL4EQchLwYY40t8gEOng==
                 // Cambiar aspecto del botón temporalmente
                 const button = document.getElementById(buttonId);
                 if (button) {
@@ -463,33 +532,134 @@
             }, 2000);
         }
 
-        // Configurar eventos para los botones de copiar
+        // ======================================================================
+        // PROTECCIÓN CONTRA ABUSO
+        // ======================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Botón para copiar mensaje encriptado
+            // DESHABILITAR DOBLE CLIC EN FORMULARIO
+            const form = document.getElementById('encriptarForm');
+            const submitBtn = document.getElementById('btnEncriptar');
+
+            if (form && submitBtn) {
+                form.addEventListener('submit', function(e) {
+                    // Solo deshabilitar si el botón no está ya deshabilitado
+                    if (!submitBtn.disabled) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Procesando...';
+                        submitBtn.classList.add('btn-processing');
+
+                        // Re-habilitar después de 5 segundos (por si hay error)
+                        setTimeout(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="bi bi-lock me-2"></i>Encriptar Mensaje';
+                            submitBtn.classList.remove('btn-processing');
+                        }, 5000);
+                    }
+                });
+            }
+
+            // PREVENIR MÚLTIPLES COPIAS RÁPIDAS
+            let ultimaCopia = 0; // Timestamp de la última copia
+            const delayMinimoCopias = 1000; // 1 segundo entre copias
+
+            // Configurar eventos para botones de copiar
             const copyMensajeBtn = document.getElementById('copyMensajeBtn');
-            if (copyMensajeBtn) {
-                copyMensajeBtn.addEventListener('click', async function() {
-                    const text = document.getElementById('mensajeEncriptado').value;
-                    await copyToClipboard(text, 'copyMensajeBtn', 'Mensaje encriptado copiado al portapapeles');
-                });
-            }
-
-            // Botón para copiar llave
             const copyLlaveBtn = document.getElementById('copyLlaveBtn');
-            if (copyLlaveBtn) {
-                copyLlaveBtn.addEventListener('click', async function() {
-                    const text = document.getElementById('llaveEncriptacion').value;
-                    await copyToClipboard(text, 'copyLlaveBtn', 'Llave de encriptación copiada al portapapeles');
-                });
+
+            function configurarBotonCopiar(boton, elementoId, mensajeExito) {
+                if (boton) {
+                    boton.addEventListener('click', async function() {
+                        const ahora = Date.now();
+
+                        // Verificar si ha pasado el tiempo mínimo desde la última copia
+                        if (ahora - ultimaCopia < delayMinimoCopias) {
+                            // Mostrar advertencia de espera
+                            const textoOriginal = boton.innerHTML;
+                            boton.innerHTML = '<i class="bi bi-hourglass me-2"></i>Espera...';
+                            boton.classList.add('btn-warning');
+                            boton.disabled = true;
+
+                            setTimeout(() => {
+                                boton.innerHTML = textoOriginal;
+                                boton.classList.remove('btn-warning');
+                                boton.disabled = false;
+                            }, 1000);
+                            return;
+                        }
+
+                        // Actualizar timestamp de última copia
+                        ultimaCopia = ahora;
+
+                        // Realizar copia
+                        const texto = document.getElementById(elementoId).value;
+                        await copyToClipboard(texto, boton.id, mensajeExito);
+                    });
+                }
             }
 
-            // Inicializar tooltips
+            configurarBotonCopiar(copyMensajeBtn, 'mensajeEncriptado', 'Mensaje encriptado copiado al portapapeles');
+            configurarBotonCopiar(copyLlaveBtn, 'llaveEncriptacion', 'Llave de encriptación copiada al portapapeles');
+
+            // AUTO-LIMPIEZA DE RESULTADOS DESPUÉS DE 60 SEGUNDOS
+        @if (!string.IsNullOrEmpty(Model?.MensajeEncriptado))
+        {
+            <text>
+                        // Configurar temporizador para limpieza automática
+                        const tiempoAutoLimpieza = 60000; // 60 segundos
+                        let timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+
+                        // Función para limpieza automática
+                        function limpiarAutomaticamente() {
+                            // Verificar si el usuario está interactuando con los resultados
+                            const estaInteractuando =
+                                document.querySelector('#copyMensajeBtn:hover, #copyLlaveBtn:hover, #mensajeEncriptado:hover, #llaveEncriptacion:hover') ||
+                                (document.activeElement &&
+                                 (document.activeElement.id === 'mensajeEncriptado' ||
+                                  document.activeElement.id === 'llaveEncriptacion'));
+
+                            if (!estaInteractuando) {
+                                // Mostrar notificación antes de limpiar
+                                const notificacion = document.createElement('div');
+                                notificacion.className = 'alert alert-warning alert-dismissible fade show position-fixed bottom-0 start-50 translate-middle-x mb-3 z-3';
+                                notificacion.innerHTML = `
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    Los resultados han sido limpiados automáticamente.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                `;
+                                document.body.appendChild(notificacion);
+
+                                // Redirigir para limpiar formulario
+                                setTimeout(() => {
+                                    window.location.href = '@Url.Action("Encriptar")';
+                                }, 1500);
+                            } else {
+                                // Reiniciar timer si el usuario está interactuando
+                                clearTimeout(timerAutoLimpieza);
+                                timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+                            }
+                        }
+
+                        // Resetear timer cuando el usuario interactúe
+                        ['click', 'mouseenter', 'focus'].forEach(evento => {
+                            document.getElementById('mensajeEncriptado')?.addEventListener(evento, () => {
+                                clearTimeout(timerAutoLimpieza);
+                                timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+                            });
+                            document.getElementById('llaveEncriptacion')?.addEventListener(evento, () => {
+                                clearTimeout(timerAutoLimpieza);
+                                timerAutoLimpieza = setTimeout(limpiarAutomaticamente, tiempoAutoLimpieza);
+                            });
+                        });
+            </text>
+        }
+
+            // INICIALIZAR TOOLTIPS 
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
-            // Hacer que los textareas sean autoajustables
+            // AUTO-AJUSTAR TEXTAREAS 
             document.querySelectorAll('.textarea-auto').forEach(textarea => {
                 // Establecer altura inicial
                 textarea.style.height = 'auto';
