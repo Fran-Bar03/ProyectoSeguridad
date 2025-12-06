@@ -15,3 +15,4 @@ appsecrets.json
 # Otros
 __pycache__/
 node_modules/
+appsettings.json

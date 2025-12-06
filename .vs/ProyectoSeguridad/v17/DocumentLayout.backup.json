@@ -7,16 +7,23 @@
       "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Hachi\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,9 +32,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Hachi\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -48,10 +52,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\middleware\\securityheadersmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\middleware\\securityheadersmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -97,32 +97,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "DatabaseService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\DatabaseService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\DatabaseService.cs",
               "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\DatabaseService.cs",
               "RelativeToolTip": "Data\\Services\\DatabaseService.cs",
-              "ViewState": "AgIAAJMAAAAAAAAAAAAowMEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAQwMEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-06T03:41:41.223Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "railway.json",
-              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\railway.json",
-              "RelativeDocumentMoniker": "ProyectoSeguridad\\railway.json",
-              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\railway.json",
-              "RelativeToolTip": "ProyectoSeguridad\\railway.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-12-06T02:03:39.922Z",
               "EditorCaption": ""
             },
             {
@@ -140,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "AccountController.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Controllers\\AccountController.cs",
@@ -148,12 +135,11 @@
               "RelativeToolTip": "ProyectoSeguridad\\Controllers\\AccountController.cs",
               "ViewState": "AgIAACwBAAAAAAAAAAAgwFkBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T22:02:34.984Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T22:02:34.984Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "JwtService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\JwtService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\JwtService.cs",
@@ -161,12 +147,11 @@
               "RelativeToolTip": "Data\\Services\\JwtService.cs",
               "ViewState": "AgIAAFsAAAAAAAAAAAAowIkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T22:00:55.391Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T22:00:55.391Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Properties\\launchSettings.json",
@@ -179,7 +164,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "secrets.json",
               "DocumentMoniker": "C:\\Users\\Hachi\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json",
               "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Roaming\\Microsoft\\UserSecrets\\19924be1-0828-4da9-bdc4-4a1d4303d336\\secrets.json",
@@ -192,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "TokenInfoViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\DTOs\\Inicio\\TokenInfoViewModel.cs",
               "RelativeDocumentMoniker": "DTOs\\Inicio\\TokenInfoViewModel.cs",
@@ -200,12 +185,11 @@
               "RelativeToolTip": "DTOs\\Inicio\\TokenInfoViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T22:15:57.861Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T22:15:57.861Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "JwtMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\JwtMiddleware.cs",
               "RelativeDocumentMoniker": "Data\\Middleware\\JwtMiddleware.cs",
@@ -213,12 +197,11 @@
               "RelativeToolTip": "Data\\Middleware\\JwtMiddleware.cs",
               "ViewState": "AgIAAHkAAAAAAAAAAAAwwKgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T01:41:48.217Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-04T01:41:48.217Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "EncryptionService.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
               "RelativeDocumentMoniker": "Data\\Services\\EncryptionService.cs",
@@ -226,12 +209,11 @@
               "RelativeToolTip": "Data\\Services\\EncryptionService.cs",
               "ViewState": "AgIAAHgAAAAAAAAAAAAwwK8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T03:52:11.429Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-04T03:52:11.429Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "EncriptacionController.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\EncriptacionController.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Controllers\\EncriptacionController.cs",
@@ -239,12 +221,36 @@
               "RelativeToolTip": "ProyectoSeguridad\\Controllers\\EncriptacionController.cs",
               "ViewState": "AgIAAI4AAAAAAAAAAAAowMEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T01:50:32.703Z",
+              "WhenOpened": "2025-12-04T01:50:32.703Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\.gitignore",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\.gitignore",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\.gitignore",
+              "RelativeToolTip": "ProyectoSeguridad\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
+              "WhenOpened": "2025-12-06T02:04:59.818Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 5,
+              "Title": "railway.json",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\railway.json",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\railway.json",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\railway.json",
+              "RelativeToolTip": "ProyectoSeguridad\\railway.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-06T02:03:39.922Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "SecurityHeadersMiddleware.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\SecurityHeadersMiddleware.cs",
               "RelativeDocumentMoniker": "Data\\Middleware\\SecurityHeadersMiddleware.cs",
@@ -252,8 +258,7 @@
               "RelativeToolTip": "Data\\Middleware\\SecurityHeadersMiddleware.cs",
               "ViewState": "AgIAADUAAAAAAAAAAAAwwHsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-04T01:43:44.497Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-04T01:43:44.497Z"
             },
             {
               "$type": "Document",
@@ -266,18 +271,6 @@
               "ViewState": "AgIAAK0AAAAAAAAAAAAwwOQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-04T00:36:59.33Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\.gitignore",
-              "RelativeDocumentMoniker": "ProyectoSeguridad\\.gitignore",
-              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\.gitignore",
-              "RelativeToolTip": "ProyectoSeguridad\\.gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAANAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
-              "WhenOpened": "2025-12-06T02:04:59.818Z"
             },
             {
               "$type": "Document",
