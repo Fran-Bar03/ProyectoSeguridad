@@ -9,7 +9,7 @@ using System.Threading.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 // ======================================================================
-// 1. CONFIGURACIÓN DE VARIABLES (RAILWAY Y LOCAL)
+//  CONFIGURACIÓN DE VARIABLES (RAILWAY Y LOCAL)
 // ======================================================================
 // Railway: Usa variables de entorno del Dashboard
 // Local: Usa secrets.json (solo en desarrollo)
@@ -26,7 +26,7 @@ if (builder.Environment.IsDevelopment()) // SOLO LOCAL
 }
 
 // ======================================================================
-// 2. DEBUG: VER QUÉ CONFIGURACIÓN SE ESTÁ USANDO
+// VER QUÉ CONFIGURACIÓN SE ESTÁ USANDO
 // ======================================================================
 Console.WriteLine("=== CONFIGURACIÓN DETECTADA ===");
 Console.WriteLine($"Entorno: {builder.Environment.EnvironmentName}");
@@ -40,7 +40,7 @@ Console.WriteLine($"Railway configurado: {(tieneRailway ? "SÍ" : "NO")}");
 Console.WriteLine($"Local configurado: {(tieneLocal ? "SÍ" : "NO")}");
 
 // ======================================================================
-// 3. CONFIGURAR RATE LIMITING (NUEVO - PROTECCIÓN CONTRA ABUSO/DDoS)
+// 3. CONFIGURAR RATE LIMITING PROTECCIÓN CONTRA ABUSO/DDoS
 // ======================================================================
 // Protege contra ataques de fuerza bruta y abuso en endpoints críticos
 // Limita: 15 peticiones por minuto por IP, 10 para encriptación/desencriptación
@@ -191,7 +191,6 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configurar el pipeline de peticiones HTTP
-// (El orden de estos middlewares ES IMPORTANTE)
 
 //  En producción: manejo de errores y HTTPS
 if (!app.Environment.IsDevelopment())
@@ -213,7 +212,7 @@ app.UseDefaultFiles();
 app.UseRouting();
 
 // ======================================================================
-// HABILITAR RATE LIMITING (NUEVO - debe ir después de UseRouting)
+// HABILITAR RATE LIMITING 
 // ======================================================================
 app.UseRateLimiter();
 

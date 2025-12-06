@@ -113,6 +113,9 @@ namespace Data.Services
                 // Registrar inicio del proceso de desencriptación
                 _logger.LogInformation("Iniciando proceso de desencriptacion");
 
+                llave = llave.Trim();  // Elimina espacios/saltos de línea que se copian mal
+                                     
+
                 //  Validar y parsear el formato de la llave compuesta
                 // La llave debe estar en formato: "KeyBase64|IVBase64"
                 var partes = llave.Split('|');
