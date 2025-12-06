@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Dockerfile" />
+    <!-- EXCLUYE Dockerfile de la compilación -->
+    <None Remove="Dockerfile" />
+    <Content Remove="Dockerfile" />
+    <Compile Remove="Dockerfile" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,4 +19,3 @@
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
   </ItemGroup>
 </Project>
-
