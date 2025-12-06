@@ -65,8 +65,7 @@ namespace Data.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),       //ID unico del token
                 new Claim(JwtRegisteredClaimNames.Iat, 
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                ClaimValueTypes.Integer64),
-                new Claim("UserAgentHash",currentUserAgentHash)
+                ClaimValueTypes.Integer64)
             };
 
 

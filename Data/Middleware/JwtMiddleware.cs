@@ -115,23 +115,6 @@ namespace Data.Middleware
                 return;
             }
 
-            // Token válido, verificar si es el mismo navegador
-            // Obtener hash del User-Agent almacenado en el token
-            var userAgentHash = principal.FindFirst("UserAgentHash")?.Value;
-
-            // Calcular hash del User-Agent actual
-            var currentUserAgentHash = UserAgentHelper.GetUserAgentHash(context);
-
-            if (userAgentHash != currentUserAgentHash)
-            {
-                // Diferente navegador: medida de seguridad contra robo de sesión
-                context.Response.Cookies.Delete("jwt_token");
-
-                // Redirigir a login con mensaje específico
-                var redirectUrl = "/Account/Login?message=SesionInvalidaNavegador";
-                context.Response.Redirect(redirectUrl);
-                return;
-            }
 
             // Token válido y mismo navegador
 

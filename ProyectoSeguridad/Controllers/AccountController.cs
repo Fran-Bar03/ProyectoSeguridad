@@ -110,7 +110,7 @@ namespace ProyectoSeguridad.Controllers
                 {
                     HttpOnly = true,      //No accesible por JavaScript (Proteccion XSS)
                     Secure = true,       // Solo se envia por HTTPS
-                    SameSite = SameSiteMode.Strict,  //Proteccion CSRF
+                    SameSite = SameSiteMode.Lax,  
                     Expires = DateTimeOffset.Now.AddDays(30),
                     MaxAge = TimeSpan.FromDays(30)
                 });
@@ -198,7 +198,7 @@ namespace ProyectoSeguridad.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict
+                SameSite = SameSiteMode.Lax
             });
 
             _logger.LogInformation("Usuario cerro sesion");
