@@ -12,24 +12,35 @@ var builder = WebApplication.CreateBuilder(args);
 // ======================================================================
 // Cargar archivo secret.json si existe para configuraciones sensibles
 // Este archivo contiene claves JWT y cadenas de conexión a BD
-var secretPath = Path.Combine(Directory.GetCurrentDirectory(), "secret.json");
-if (File.Exists(secretPath))
-{
-    builder.Configuration.AddJsonFile(secretPath, optional: false, reloadOnChange: true);
-}
+// COMENTADO PARA VERCEL: En Vercel usamos Variables de Entorno
+// var secretPath = Path.Combine(Directory.GetCurrentDirectory(), "secret.json");
+// if (File.Exists(secretPath))
+// {
+//     builder.Configuration.AddJsonFile(secretPath, optional: false, reloadOnChange: true);
+// }
 
 // ======================================================================
 // CONFIGURACIÓN DE KESTREL PARA ENTORNO PRODUCCIÓN
 // ======================================================================
 // Configurar para permitir conexiones desde cualquier IP en VirtualBox
-if (builder.Environment.IsProduction())
-{
-    builder.WebHost.ConfigureKestrel(opcionServidor =>
-    {
-        opcionServidor.ListenAnyIP(5000);   // HTTP
-        opcionServidor.ListenAnyIP(5001);   // HTTPS
-    });
-}
+// COMENTADO PARA VERCEL: Vercel maneja el servidor automáticamente
+// if (builder.Environment.IsProduction())
+// {
+//     builder.WebHost.ConfigureKestrel(opcionServidor =>
+//     {
+//         opcionServidor.ListenAnyIP(5000);   // HTTP
+//         opcionServidor.ListenAnyIP(5001);   // HTTPS
+//     });
+// }
+
+// ======================================================================
+// DEBUG: Verificar configuración (QUITAR después del deploy exitoso)
+// ======================================================================
+Console.WriteLine("=== CONFIG DEBUG ===");
+Console.WriteLine($"JWT Key configurada: {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
+Console.WriteLine($"JWT__Key configurada: {!string.IsNullOrEmpty(builder.Configuration["JWT__Key"])}");
+Console.WriteLine($"Connection String configurada: {!string.IsNullOrEmpty(builder.Configuration["ConnectionStrings:CONNECTION_STRING"])}");
+Console.WriteLine("=== FIN DEBUG ===");
 
 // ======================================================================
 // REGISTRO DE SERVICIOS DE LA APLICACIÓN
@@ -80,8 +91,10 @@ builder.Services.AddScoped<JwtService>(sp =>
 // CONFIGURACIÓN DE AUTENTICACIÓN JWT
 // ======================================================================
 // Obtener clave JWT desde configuración (requerida para firmar tokens)
+// MODIFICADO PARA VERCEL: Compatible con Variables de Entorno (JWT__Key)
 var llaveJwt = builder.Configuration["Jwt:Key"] ??
-    throw new Exception("JWT Key no configurada en secret.json");
+               builder.Configuration["JWT__Key"] ??
+               throw new Exception("JWT Key no configurada. Configura JWT__Key en Vercel");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opciones =>
@@ -93,8 +106,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = false, // Sin expiración para tokens indefinidos
-            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "SecurityApp",
-            ValidAudience = builder.Configuration["Jwt:Audience"] ?? "SecurityUsers",
+            // MODIFICADO PARA VERCEL: Compatible con Variables de Entorno
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? builder.Configuration["JWT__Issuer"] ?? "SecurityApp",
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? builder.Configuration["JWT__Audience"] ?? "SecurityUsers",
             ClockSkew = TimeSpan.Zero // Sin tolerancia para expiración
         };
 
@@ -153,5 +167,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
-// Iniciar aplicación
-app.Run();
+// ======================================================================
+// INICIAR APLICACIÓN - MODIFICADO PARA VERCEL
+// ======================================================================
+// Vercel asigna un puerto dinámico a través de la variable PORT
+// Esto reemplaza a: app.Run();
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    // Modo Vercel: usar puerto dinámico
+    app.Run($"http://0.0.0.0:{port}");
+}
+else
+{
+    // Modo local: usar configuración normal
+    app.Run();
+}

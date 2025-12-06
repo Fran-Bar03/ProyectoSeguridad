@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "ProyectoSeguridad.csproj",
+            "use": "@vercel/dotnet"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
+}
