@@ -71,15 +71,19 @@ namespace Data.Services
 
 
             //Crear clave simetrica para firmar el token usando la clave secreta de la configuracion
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                Environment.GetEnvironmentVariable("JWT__Key") ??
+                _configuration["Jwt:Key"] ??
+                throw new Exception("JWT Key no configurada")
+            ));
 
             //Crear credenciales de firma usando algoritmo HMAC-SHA256
             var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
             //Crear el token JWT con toda la configuracion necesaria
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],       //Emisor del token
-                audience: _configuration["Jwt:Audience"], //Audiencia destinataria
+                issuer: Environment.GetEnvironmentVariable("JWT__Issuer") ?? _configuration["Jwt:Issuer"] ?? "SecurityApp",      //Emisor del token
+                audience: Environment.GetEnvironmentVariable("JWT__Audience") ?? _configuration["Jwt:Audience"] ?? "SecurityUsers", //Audiencia destinataria
                 claims: claims,                            //Claims del usuario
                 expires: null,     //Sin Expiracion   
                 signingCredentials: credenciales);  //Credenciales de firma                          
@@ -102,7 +106,7 @@ namespace Data.Services
             {
 
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var llave = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+                var llave = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT__Key") ??  _configuration["Jwt:Key"] ?? throw new Exception("JWT Key no configurada"));
 
                 //Configurar parametros de validacion del token
                 var ValidadcionParametros = new TokenValidationParameters
@@ -112,8 +116,10 @@ namespace Data.Services
                     ValidateIssuer = true,                                  // Validar el emisor
                     ValidateAudience = true,                                // Validar la audiencia
                     ValidateLifetime = false,                                // Validar fecha de expiración
-                    ValidIssuer = _configuration["Jwt:Issuer"],             // Emisor válido
-                    ValidAudience = _configuration["Jwt:Audience"],         // Audiencia válida
+                    ValidIssuer = Environment.GetEnvironmentVariable("JWT__Issuer") ??
+              _configuration["Jwt:Issuer"] ?? "SecurityApp",             // Emisor válido
+                    ValidAudience = Environment.GetEnvironmentVariable("JWT__Audience") ??
+                _configuration["Jwt:Audience"] ?? "SecurityUsers",  //Audiencia valida
                     ClockSkew = TimeSpan.Zero                               // Sin tolerancia para expiración
                 };
 

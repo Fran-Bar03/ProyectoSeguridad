@@ -31,13 +31,45 @@ namespace Data.Services
         /// </summary>
         /// <param name="configuration">Instancia de IConfiguration para obtener la cadena de conexión</param>
         /// <param name="logger">Instancia de ILogger para registro de eventos</param>
-         
+
         public DatabaseService(IConfiguration configuration, ILogger<DatabaseService> logger)
         {
-            //Obtener la cadena de conexion
-            _connectionString = configuration.GetConnectionString("CONNECTION_STRING") ?? throw new Exception("No se pudo encontrar la cadena de conexion a la base de datos");
 
             _logger = logger;
+
+            // ==============================================
+            // ORDEN DE PRIORIDAD PARA CONEXIÓN A BD:
+            // ==============================================
+            //  Railway (Variables de entorno) DESPLIEGUE
+            _connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+            // Local (secrets.json)  DESARROLLO
+            if (string.IsNullOrEmpty(_connectionString))
+            {
+                _connectionString = configuration.GetConnectionString("CONNECTION_STRING") ??
+                                   configuration["ConnectionStrings:CONNECTION_STRING"];
+            }
+
+            // Verificar que se configuró algo
+            if (string.IsNullOrEmpty(_connectionString))
+            {
+                throw new Exception(
+                    "ERROR: Cadena de conexión no configurada.\n\n" +
+                    "PARA RAILWAY:\n" +
+                    "1. Ve a Railway Dashboard → Variables\n" +
+                    "2. Añade: CONNECTION_STRING = [tu_cadena]\n\n" +
+                    "PARA LOCAL:\n" +
+                    "1. Asegúrate de tener secrets.json\n" +
+                    "2. Con: {\"ConnectionStrings\":{\"CONNECTION_STRING\":\"[tu_cadena]\"}}"
+                );
+            }
+
+            // Debug: mostrar qué se usó
+            var source = Environment.GetEnvironmentVariable("CONNECTION_STRING") != null
+                ? "Railway (Variables)"
+                : "Local (secrets.json)";
+
+            Console.WriteLine($"✓ DatabaseService configurado desde: {source}");
         }
 
 
