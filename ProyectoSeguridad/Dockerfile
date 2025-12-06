@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copiar archivos de proyecto
+# Copiar archivos de proyecto (rutas relativas desde la raíz)
 COPY ["ProyectoSeguridad/ProyectoSeguridad.csproj", "ProyectoSeguridad/"]
 COPY ["Data/Data.csproj", "Data/"]
 COPY ["Models/Models.csproj", "Models/"]
