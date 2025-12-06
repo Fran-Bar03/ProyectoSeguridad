@@ -1,8 +1,9 @@
 {
+    "version": 2,
     "builds": [
         {
             "src": "ProyectoSeguridad/ProyectoSeguridad.csproj",
-            "use": "@vercel/dotnet"
+            "use": "@vercel/dotnet@canary"
         }
     ],
     "routes": [
