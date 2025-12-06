@@ -62,7 +62,7 @@ namespace ProyectoSeguridad.Controllers
                 ViewBag.Message = message switch
                 {
                     "NecesitaAutenticacion" => "Debes iniciar sesión para acceder a esta página",
-                    "TokenExpirado" => "Tu sesión ha expirado, inicia sesión nuevamente",
+                    "TokenInvalido" => "Token invalido. Inicia sesion de nuevo",
                     "SesionInvalidaNavegador" => "La sesión no es válida en este navegador. Por seguridad, inicia sesión nuevamente.",
                     "CambioUsuarioDetectado" => "Se detectó un cambio de usuario. Por seguridad, inicia sesión nuevamente.",
                     _ => message
@@ -110,8 +110,9 @@ namespace ProyectoSeguridad.Controllers
                 {
                     HttpOnly = true,      //No accesible por JavaScript (Proteccion XSS)
                     Secure = true,       // Solo se envia por HTTPS
-                    SameSite = SameSiteMode.Strict,   //Proteccion CSRF
-                    Expires = DateTimeOffset.Now.AddMinutes(20)  //.Expiracion corta por seguridad
+                    SameSite = SameSiteMode.Strict,  //Proteccion CSRF
+                    Expires = DateTimeOffset.Now.AddDays(30),
+                    MaxAge = TimeSpan.FromDays(30)
                 });
 
                 _logger.LogInformation("Login exitoso para usuario: {Email}", loginDto.Email);
@@ -191,11 +192,6 @@ namespace ProyectoSeguridad.Controllers
         public IActionResult LogOut()
         {
 
-            // Headers anti-caché NUCLEARES para logout
-            Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private";
-            Response.Headers["Pragma"] = "no-cache";
-            Response.Headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT";
-            Response.Headers["Vary"] = "*";
 
             // Eliminar cookie de autenticacion
             Response.Cookies.Delete("jwt_token", new CookieOptions
@@ -206,13 +202,11 @@ namespace ProyectoSeguridad.Controllers
             });
 
             _logger.LogInformation("Usuario cerro sesion");
-            TempData["SucessMessage"] = "Sesion cerrada con exito";
+            TempData["SuccessMessage"] = "Sesion cerrada con exito";
 
             // Forzar redirección con parámetros anti-caché
-            return RedirectToAction("Login", "Account", new
-            {
-                timestamp = DateTime.UtcNow.Ticks // Agrega timestamp único
-            });
+            return RedirectToAction("Login", "Account");
+          
         }
 
         /// <summary>
@@ -243,10 +237,9 @@ namespace ProyectoSeguridad.Controllers
                 var usuarioNombreCompleto = User.FindFirst("NombreCompleto")?.Value;
                 var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                // Obtener fechas del token en UTC
+                // Obtener fechas de crecion del token en UTC
                 DateTime fechaCreacionUtc = DateTime.UtcNow;
-                DateTime fechaExpiracionUtc = DateTime.UtcNow;
-                DateTime ahoraHermosillo = TimeZoneHelper.NowInHermosillo();
+
 
                 // Obtener fecha de creación desde el claim "iat"
                 var iatClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Iat);
@@ -255,25 +248,13 @@ namespace ProyectoSeguridad.Controllers
                     fechaCreacionUtc = DateTimeOffset.FromUnixTimeSeconds(iatTimestamp).UtcDateTime;
                 }
 
-                // Obtener fecha de expiración desde el claim "exp"
-                var expClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp);
-                if (expClaim != null && long.TryParse(expClaim.Value, out long expTimestamp))
-                {
-                    fechaExpiracionUtc = DateTimeOffset.FromUnixTimeSeconds(expTimestamp).UtcDateTime;
-                }
-
                 // Convertir a hora de Hermosillo
                 var fechaCreacionHermosillo = TimeZoneHelper.ToHermosilloTime(fechaCreacionUtc);
-                var fechaExpiracionHermosillo = TimeZoneHelper.ToHermosilloTime(fechaExpiracionUtc);
 
-                // Calcular tiempo restante 
-                var tiempoRestante = fechaExpiracionHermosillo - ahoraHermosillo;
-                var minutosRestantes = Math.Max(0, (int)Math.Floor(tiempoRestante.TotalMinutes));
-                var segundosRestantes = Math.Max(0, (int)tiempoRestante.TotalSeconds % 60);
 
-                // Formatear fechas para mostrar
+                // Formatear fecha para mostrar
                 string fechaCreacionFormateada = fechaCreacionHermosillo.ToString("yyyy.MM.dd HH:mm:ss");
-                string fechaExpiracionFormateada = fechaExpiracionHermosillo.ToString("yyyy.MM.dd HH:mm:ss");
+
 
                 // Crear ViewModel con información PRECISA
                 var viewModel = new TokenInfoViewModel
@@ -282,26 +263,18 @@ namespace ProyectoSeguridad.Controllers
                     UsuarioNombreCompleto = usuarioNombreCompleto,
                     UsuarioId = usuarioId,
                     TokenGenerado = fechaCreacionFormateada,
-                    TokenExpira = fechaExpiracionFormateada,
+                    TokenExpira = "No expira",
                     TokenGeneradoUtc = fechaCreacionUtc,
-                    TokenExpiraUtc = fechaExpiracionUtc,
                     TokenGeneradoHermosillo = fechaCreacionHermosillo,
-                    TokenExpiraHermosillo = fechaExpiracionHermosillo,
 
-                    MinutosRestantes = minutosRestantes,
-                    SegundosRestantes = segundosRestantes,
-
-                    // Timestamps para JavaScript
-                    ExpiraUnixTimestamp = ((DateTimeOffset)fechaExpiracionHermosillo).ToUnixTimeSeconds(),
-                    GeneradoUnixTimestamp = ((DateTimeOffset)fechaCreacionHermosillo).ToUnixTimeSeconds(),
+                    // Claims filtrados
+                    Claims = GetSafeClaims(jsonToken),
 
                     // Mostrar solo partes del token
                     TokenPreview = token.Length > 30 ? token.Substring(0, 30) + "..." : token,
                     TokenUltimosCaracteres = token.Length > 20 ?
                         "..." + token.Substring(token.Length - 20) : token,
 
-                    // Claims filtrados
-                    Claims = GetSafeClaims(jsonToken)
                 };
 
                 ViewBag.HideSimpleTimer = true;
@@ -361,7 +334,6 @@ namespace ProyectoSeguridad.Controllers
                 ClaimTypes.Name => "Nombre del usuario",
                 "NombreCompleto" => "Nombre completo (Nombre + Apellidos)",
                 JwtRegisteredClaimNames.Jti => "Identificador único del token (JWT ID)",
-                JwtRegisteredClaimNames.Exp => "Fecha de expiración del token (timestamp)",
                 JwtRegisteredClaimNames.Iat => "Fecha de emisión del token (timestamp)",
                 "UserAgentHash" => "Hash del navegador (protección contra uso en diferentes navegadores)",
                 _ => "Información de autenticación"

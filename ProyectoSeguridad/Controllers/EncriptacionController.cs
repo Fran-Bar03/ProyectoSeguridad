@@ -40,24 +40,15 @@ namespace ProyectoSeguridad.Controllers
         [HttpGet]
         public IActionResult Encriptar()
         {
-
             HttpContext.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private";
             HttpContext.Response.Headers["Pragma"] = "no-cache";
             HttpContext.Response.Headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT";
             HttpContext.Response.Headers["Vary"] = "*";
 
-
+            // ===== NUEVO: LIMPIAR ESTADO COMPLETAMENTE =====
             ModelState.Clear();
             ViewData.Clear();
-
-            //Obtener informacion del usuario desde los claims del token JWT
-            //Los claims se establecieron durante el login y estan disponibles en User
-            ViewBag.UsuarioNombre = User.FindFirst("NombreCompleto")?.Value ?? User.Identity.Name;
-            ViewBag.UsuarioEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-            // Headers adicionales anti-caché
-            HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0";
-            HttpContext.Response.Headers["Pragma"] = "no-cache";
-            HttpContext.Response.Headers["Expires"] = "0";
+            TempData.Clear();
 
             // Siempre retornar un nuevo modelo vacío
             return View(new EncriptarDto());
@@ -75,18 +66,18 @@ namespace ProyectoSeguridad.Controllers
         [ValidateAntiForgeryToken]    //Proteccion contra CSRF
         public IActionResult Encriptar(EncriptarDto encriptarDto)
         {
+            HttpContext.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private";
+            HttpContext.Response.Headers["Pragma"] = "no-cache";
+            HttpContext.Response.Headers["Expires"] = "0";
+
             if (!ModelState.IsValid)
             {
-                // Limpiar cualquier dato previo en caso de error
+                // Limpiar completamente en caso de error
                 encriptarDto.MensajeEncriptado = null;
                 encriptarDto.Llave = null;
+                ModelState.Clear();
 
-                ViewBag.UsuarioNombre = User.FindFirst("NombreCompleto")?.Value ?? User.Identity.Name;
-
-                // Headers anti-caché
-                HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-
-                return View(encriptarDto);
+                return View(new EncriptarDto());
             }
 
             try
@@ -94,12 +85,12 @@ namespace ProyectoSeguridad.Controllers
                 // Encriptar el mensaje usando el servicio de encriptacion
                 var (mensajeEncriptado, llave) = _encryptionService.EncriptarAES(encriptarDto.Mensaje);
 
-                // ===== NUEVO: Crear NUEVO objeto, no reusar =====
+                //  Crear NUEVO objeto, no reusar
                 var resultadoDto = new EncriptarDto
                 {
                     MensajeEncriptado = mensajeEncriptado,
                     Llave = llave
-                    // NO incluir el mensaje original
+                   
                 };
 
                 // Mostrar mensaje de éxito en la vista
@@ -108,7 +99,7 @@ namespace ProyectoSeguridad.Controllers
                 // Mantener la información del usuario en la vista
                 ViewBag.UsuarioNombre = User.FindFirst("NombreCompleto")?.Value ?? User.Identity.Name;
 
-                // ===== NUEVO: Headers anti-caché =====
+                // Headers anti-caché
                 HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
 
                 return View(resultadoDto);

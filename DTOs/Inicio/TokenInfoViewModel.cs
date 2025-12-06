@@ -15,20 +15,13 @@ namespace DTOs.Inicio
         public string? TokenExpira { get; set; }
 
        
-        public DateTime TokenExpiraUtc { get; set; }
         public DateTime TokenGeneradoUtc { get; set; }
-        public DateTime TokenExpiraHermosillo { get; set; }
         public DateTime TokenGeneradoHermosillo { get; set; }
 
-        public int MinutosRestantes { get; set; }
-        public int SegundosRestantes { get; set; }  //Para mayor precisión
         public List<ClaimInfo> Claims { get; set; } = new List<ClaimInfo>();
         public string? TokenPreview { get; set; }
         public string? TokenUltimosCaracteres { get; set; }
 
-        //Timestamp Unix para JavaScript
-        public long ExpiraUnixTimestamp { get; set; }
-        public long GeneradoUnixTimestamp { get; set; }
     }
 
     public class ClaimInfo

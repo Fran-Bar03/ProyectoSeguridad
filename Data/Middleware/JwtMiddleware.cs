@@ -73,7 +73,7 @@ namespace Data.Middleware
             // Verificar si la ruta actual está protegida
             var esRutaProtegida = rutasProtegidas.Any(ruta => path.StartsWith(ruta));
 
-            // ===== CASO 1: Si es ruta pública, continuar sin verificar autenticación =====
+            //  Si es ruta pública, continuar sin verificar autenticación 
             // Permite acceso libre a login, registro y páginas de error
             if (esRutaPublica)
             {
@@ -101,7 +101,7 @@ namespace Data.Middleware
                 return;
             }
 
-            // Subcaso 3B: Hay token, validarlo usando el servicio JWT
+            //  Hay token, validarlo usando el servicio JWT
             var principal = jwtService.ValidarToken(token);
 
             if (principal == null)
@@ -111,7 +111,7 @@ namespace Data.Middleware
                 context.Response.Cookies.Delete("jwt_token");
 
                 // Redirigir a login indicando que el token expiró
-                context.Response.Redirect("/Account/Login?message=TokenExpirado");
+                context.Response.Redirect("/Account/Login?message=TokenInvalido");
                 return;
             }
 

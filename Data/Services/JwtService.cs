@@ -81,7 +81,7 @@ namespace Data.Services
                 issuer: _configuration["Jwt:Issuer"],       //Emisor del token
                 audience: _configuration["Jwt:Audience"], //Audiencia destinataria
                 claims: claims,                            //Claims del usuario
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpireMinutes"])),        //Expiracion   
+                expires: null,     //Sin Expiracion   
                 signingCredentials: credenciales);  //Credenciales de firma                          
 
 
@@ -111,7 +111,7 @@ namespace Data.Services
                     IssuerSigningKey = new SymmetricSecurityKey(llave),     // Clave para validar firma
                     ValidateIssuer = true,                                  // Validar el emisor
                     ValidateAudience = true,                                // Validar la audiencia
-                    ValidateLifetime = true,                                // Validar fecha de expiración
+                    ValidateLifetime = false,                                // Validar fecha de expiración
                     ValidIssuer = _configuration["Jwt:Issuer"],             // Emisor válido
                     ValidAudience = _configuration["Jwt:Audience"],         // Audiencia válida
                     ClockSkew = TimeSpan.Zero                               // Sin tolerancia para expiración
