@@ -1,7 +1,7 @@
 {
     "builds": [
         {
-            "src": "ProyectoSeguridad.csproj",
+            "src": "ProyectoSeguridad/ProyectoSeguridad.csproj",
             "use": "@vercel/dotnet"
         }
     ],

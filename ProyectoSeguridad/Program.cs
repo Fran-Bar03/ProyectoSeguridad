@@ -36,11 +36,10 @@ var builder = WebApplication.CreateBuilder(args);
 // ======================================================================
 // DEBUG: Verificar configuración (QUITAR después del deploy exitoso)
 // ======================================================================
-Console.WriteLine("=== CONFIG DEBUG ===");
-Console.WriteLine($"JWT Key configurada: {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
-Console.WriteLine($"JWT__Key configurada: {!string.IsNullOrEmpty(builder.Configuration["JWT__Key"])}");
-Console.WriteLine($"Connection String configurada: {!string.IsNullOrEmpty(builder.Configuration["ConnectionStrings:CONNECTION_STRING"])}");
-Console.WriteLine("=== FIN DEBUG ===");
+Console.WriteLine("=== VERCEL ENV VARS ===");
+Console.WriteLine($"PORT: {Environment.GetEnvironmentVariable("PORT")}");
+Console.WriteLine($"CONNECTION_STRING: {Environment.GetEnvironmentVariable("CONNECTION_STRING")?.Substring(0, Math.Min(20, Environment.GetEnvironmentVariable("CONNECTION_STRING")?.Length ?? 0))}...");
+Console.WriteLine($"JWT__Key: {(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("JWT__Key")) ? "NO" : "SÍ")}");
 
 // ======================================================================
 // REGISTRO DE SERVICIOS DE LA APLICACIÓN
