@@ -40,7 +40,7 @@ Console.WriteLine($"Railway configurado: {(tieneRailway ? "SÍ" : "NO")}");
 Console.WriteLine($"Local configurado: {(tieneLocal ? "SÍ" : "NO")}");
 
 // ======================================================================
-// 3. CONFIGURAR RATE LIMITING PROTECCIÓN CONTRA ABUSO/DDoS
+// CONFIGURAR RATE LIMITING PROTECCIÓN CONTRA ABUSO/DDoS
 // ======================================================================
 // Protege contra ataques de fuerza bruta y abuso en endpoints críticos
 // Limita: 15 peticiones por minuto por IP, 10 para encriptación/desencriptación
@@ -139,7 +139,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 
 // ======================================================================
-// SERVICIO JWT (para autenticación)
+// SERVICIO JWT para autenticación
 // ======================================================================
 // Registramos el servicio JWT de dos formas:
 // Como interfaz IJwtService (para controladores)
@@ -158,7 +158,7 @@ builder.Services.AddScoped<JwtService>(sp =>
     ));
 
 // ======================================================================
-// CONFIGURAR AUTENTICACIÓN JWT (LO MÁS IMPORTANTE)
+// CONFIGURAR AUTENTICACIÓN JWT
 // ======================================================================
 // ORDEN DE PRIORIDAD para la clave JWT:
 //  Railway: Environment.GetEnvironmentVariable("JWT__Key") ← PRODUCCIÓN
@@ -204,7 +204,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Habilitar autorización (requerido para [Authorize])
+// Habilitar autorización 
 builder.Services.AddAuthorization();
 
 // ======================================================================
@@ -239,7 +239,7 @@ app.UseRouting();
 app.UseRateLimiter();
 
 // Middleware personalizado: Headers de seguridad
-// MODIFICADO: Ahora incluye headers específicos para dispositivos móviles
+// incluye headers específicos para dispositivos móviles
 app.UseMiddleware<SecurityHeadersMiddleware>();
 
 // Habilitar autenticación y autorización
@@ -247,7 +247,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Middleware personalizado: Validar JWT en cada petición
-// MODIFICADO: Ahora detecta y maneja dispositivos móviles
+// detecta y maneja dispositivos móviles
 app.UseMiddleware<JwtMiddleware>();
 
 // Configurar rutas por defecto (MVC)

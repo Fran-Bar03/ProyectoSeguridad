@@ -174,7 +174,7 @@ namespace Data.Middleware
             }
 
             // ======================================================================
-            // DETECCIÓN DE CAMBIO DE USUARIO (PROTECCIÓN ADICIONAL)
+            // DETECCIÓN DE CAMBIO DE USUARIO
             // ======================================================================
             // Verificar que no haya cambio de usuario durante la misma sesión
 

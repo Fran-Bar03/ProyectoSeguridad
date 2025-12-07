@@ -97,17 +97,14 @@
                                 <input asp-for="Password" type="password" class="form-control"
                                        placeholder="••••••••" required
                                        id="passwordInput"
-                                       minlength="6"
-                                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$"
-                                       data-val="true"
-                                       data-val-regex="La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, un número y un carácter especial"
-                                       data-val-regex-pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$">
+                                       data-minlength="6">
                                 <button class="btn btn-outline-secondary" type="button"
                                         id="togglePassword1">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
                             <span asp-validation-for="Password" class="text-danger small"></span>
+                            <div id="passwordError" class="text-danger small mt-1" style="display: none;"></div>
                         </div>
 
                         <div class="col-md-6">
@@ -127,6 +124,7 @@
                                 </button>
                             </div>
                             <span asp-validation-for="ConfirmarPassword" class="text-danger small"></span>
+                            <div id="confirmPasswordError" class="text-danger small mt-1" style="display: none;"></div>
                         </div>
 
                         <!-- Indicador de Fortaleza de Contraseña -->
@@ -233,136 +231,204 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Toggle passwords visibility
-        function setupPasswordToggle(buttonId, inputName) {
-            const button = document.getElementById(buttonId);
-            if (button) {
-                button.addEventListener('click', function() {
-                    const input = document.querySelector(`input[name="${inputName}"]`);
-                    const icon = this.querySelector('i');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle passwords visibility
+            function setupPasswordToggle(buttonId, inputId) {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const input = document.getElementById(inputId);
+                        const icon = this.querySelector('i');
 
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        icon.classList.remove('bi-eye');
-                        icon.classList.add('bi-eye-slash');
+                        if (input.type === 'password') {
+                            input.type = 'text';
+                            icon.classList.remove('bi-eye');
+                            icon.classList.add('bi-eye-slash');
+                        } else {
+                            input.type = 'password';
+                            icon.classList.remove('bi-eye-slash');
+                            icon.classList.add('bi-eye');
+                        }
+                    });
+                }
+            }
+
+            setupPasswordToggle('togglePassword1', 'passwordInput');
+            setupPasswordToggle('togglePassword2', 'confirmPasswordInput');
+
+            // Elementos del indicador de fortaleza
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+            const lengthIcon = document.getElementById('lengthIcon');
+            const uppercaseIcon = document.getElementById('uppercaseIcon');
+            const numberIcon = document.getElementById('numberIcon');
+            const specialIcon = document.getElementById('specialIcon');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            const form = document.getElementById('registroForm');
+
+            // Validar requisitos de contraseña
+            function validatePasswordRequirements(password) {
+                const requirements = {
+                    hasLength: password.length >= 6,
+                    hasUppercase: /[A-Z]/.test(password),
+                    hasNumber: /\d/.test(password),
+                    hasSpecial: /[^A-Za-z0-9]/.test(password)
+                };
+
+                return requirements;
+            }
+
+            function checkPasswordStrength(password) {
+                const requirements = validatePasswordRequirements(password);
+
+                // Actualizar íconos
+                updateRequirementIcon(lengthIcon, requirements.hasLength);
+                updateRequirementIcon(uppercaseIcon, requirements.hasUppercase);
+                updateRequirementIcon(numberIcon, requirements.hasNumber);
+                updateRequirementIcon(specialIcon, requirements.hasSpecial);
+
+                // Calcular puntaje
+                let score = 0;
+                if (requirements.hasLength) score += 25;
+                if (requirements.hasUppercase) score += 25;
+                if (requirements.hasNumber) score += 25;
+                if (requirements.hasSpecial) score += 25;
+
+                // Actualizar barra de progreso
+                passwordStrengthBar.style.width = score + '%';
+
+                // Cambiar color según fortaleza
+                if (score < 50) {
+                    passwordStrengthBar.className = 'progress-bar bg-danger';
+                } else if (score < 75) {
+                    passwordStrengthBar.className = 'progress-bar bg-warning';
+                } else {
+                    passwordStrengthBar.className = 'progress-bar bg-success';
+                }
+
+                return requirements;
+            }
+
+            function updateRequirementIcon(iconElement, isValid) {
+                if (isValid) {
+                    iconElement.className = 'bi bi-check-circle-fill me-2 text-success';
+                } else {
+                    iconElement.className = 'bi bi-circle me-2 text-muted';
+                }
+            }
+
+            // Validar contraseña mientras se escribe
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+
+                    if (password.length === 0) {
+                        // Limpiar errores y barra si está vacío
+                        passwordError.style.display = 'none';
+                        passwordError.textContent = '';
+                        passwordStrengthBar.style.width = '0%';
+                        resetIcons();
+                        return;
+                    }
+
+                    const requirements = checkPasswordStrength(password);
+
+                    // Mostrar/ocultar errores
+                    if (!requirements.hasLength || !requirements.hasUppercase ||
+                        !requirements.hasNumber || !requirements.hasSpecial) {
+                        passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, un número y un carácter especial';
+                        passwordError.style.display = 'block';
                     } else {
-                        input.type = 'password';
-                        icon.classList.remove('bi-eye-slash');
-                        icon.classList.add('bi-eye');
+                        passwordError.style.display = 'none';
+                        passwordError.textContent = '';
+                    }
+
+                    // Validar confirmación de contraseña
+                    if (confirmPasswordInput.value) {
+                        validatePasswordMatch();
                     }
                 });
             }
-        }
 
-        setupPasswordToggle('togglePassword1', 'Password');
-        setupPasswordToggle('togglePassword2', 'ConfirmarPassword');
-
-        // Validación de contraseña fuerte en tiempo real
-        const passwordInput = document.getElementById('passwordInput');
-        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-
-        // Elementos del indicador de fortaleza
-        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
-        const lengthIcon = document.getElementById('lengthIcon');
-        const uppercaseIcon = document.getElementById('uppercaseIcon');
-        const numberIcon = document.getElementById('numberIcon');
-        const specialIcon = document.getElementById('specialIcon');
-
-        function checkPasswordStrength(password) {
-            let score = 0;
-            const requirements = {
-                hasLength: password.length >= 6,
-                hasUppercase: /[A-Z]/.test(password),
-                hasNumber: /\d/.test(password),
-                hasSpecial: /[^A-Za-z0-9]/.test(password)
-            };
-
-            // Actualizar íconos
-            updateRequirementIcon(lengthIcon, requirements.hasLength);
-            updateRequirementIcon(uppercaseIcon, requirements.hasUppercase);
-            updateRequirementIcon(numberIcon, requirements.hasNumber);
-            updateRequirementIcon(specialIcon, requirements.hasSpecial);
-
-            // Calcular puntaje
-            if (requirements.hasLength) score += 25;
-            if (requirements.hasUppercase) score += 25;
-            if (requirements.hasNumber) score += 25;
-            if (requirements.hasSpecial) score += 25;
-
-            // Actualizar barra de progreso
-            passwordStrengthBar.style.width = score + '%';
-
-            // Cambiar color según fortaleza
-            if (score < 50) {
-                passwordStrengthBar.className = 'progress-bar bg-danger';
-            } else if (score < 75) {
-                passwordStrengthBar.className = 'progress-bar bg-warning';
-            } else {
-                passwordStrengthBar.className = 'progress-bar bg-success';
+            function resetIcons() {
+                lengthIcon.className = 'bi bi-circle me-2 text-muted';
+                uppercaseIcon.className = 'bi bi-circle me-2 text-muted';
+                numberIcon.className = 'bi bi-circle me-2 text-muted';
+                specialIcon.className = 'bi bi-circle me-2 text-muted';
             }
-        }
 
-        function updateRequirementIcon(iconElement, isValid) {
-            if (isValid) {
-                iconElement.className = 'bi bi-check-circle-fill me-2 text-success';
-            } else {
-                iconElement.className = 'bi bi-circle me-2 text-muted';
-            }
-        }
-
-        // Validar contraseña mientras se escribe
-        if (passwordInput) {
-            passwordInput.addEventListener('input', function() {
-                checkPasswordStrength(this.value);
-
-                // Validar confirmación de contraseña
-                if (confirmPasswordInput.value) {
-                    validatePasswordMatch();
+            // Validar que las contraseñas coincidan
+            function validatePasswordMatch() {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    confirmPasswordError.textContent = 'Las contraseñas no coinciden';
+                    confirmPasswordError.style.display = 'block';
+                    confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+                } else {
+                    confirmPasswordError.style.display = 'none';
+                    confirmPasswordError.textContent = '';
+                    confirmPasswordInput.setCustomValidity('');
                 }
-            });
-        }
-
-        // Validar que las contraseñas coincidan
-        function validatePasswordMatch() {
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
-            } else {
-                confirmPasswordInput.setCustomValidity('');
             }
-        }
 
-        if (confirmPasswordInput) {
-            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
-        }
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', function() {
+                    if (passwordInput.value && this.value) {
+                        validatePasswordMatch();
+                    } else {
+                        confirmPasswordError.style.display = 'none';
+                        confirmPasswordError.textContent = '';
+                        this.setCustomValidity('');
+                    }
+                });
+            }
 
-        // Validación Bootstrap personalizada
-        (function () {
-            'use strict'
+            // Validación del formulario completa
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    let isValid = true;
 
-            const forms = document.querySelectorAll('.needs-validation');
-
-            Array.prototype.slice.call(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    // Validar fortaleza de contraseña
+                    // Validar contraseña
                     if (passwordInput && passwordInput.value) {
                         const password = passwordInput.value;
-                        const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$/.test(password);
+                        const requirements = validatePasswordRequirements(password);
 
-                        if (!isValid) {
-                            passwordInput.setCustomValidity(
-                                'La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, un número y un carácter especial'
-                            );
+                        if (!requirements.hasLength || !requirements.hasUppercase ||
+                            !requirements.hasNumber || !requirements.hasSpecial) {
+                            passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres, incluyendo una mayúscula, un número y un carácter especial';
+                            passwordError.style.display = 'block';
+                            passwordInput.setCustomValidity('Contraseña inválida');
+                            isValid = false;
                         } else {
+                            passwordError.style.display = 'none';
+                            passwordError.textContent = '';
                             passwordInput.setCustomValidity('');
                         }
                     }
 
                     // Validar que las contraseñas coincidan
-                    if (passwordInput && confirmPasswordInput &&
-                        passwordInput.value !== confirmPasswordInput.value) {
-                        confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+                    if (passwordInput && confirmPasswordInput) {
+                        if (passwordInput.value !== confirmPasswordInput.value) {
+                            confirmPasswordError.textContent = 'Las contraseñas no coinciden';
+                            confirmPasswordError.style.display = 'block';
+                            confirmPasswordInput.setCustomValidity('Las contraseñas no coinciden');
+                            isValid = false;
+                        } else {
+                            confirmPasswordError.style.display = 'none';
+                            confirmPasswordError.textContent = '';
+                            confirmPasswordInput.setCustomValidity('');
+                        }
                     }
 
+                    if (!isValid) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        // Forzar la actualización de la validación de Bootstrap
+                        form.classList.add('was-validated');
+                    }
+
+                    // Continuar con la validación nativa de Bootstrap
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -370,7 +436,31 @@
 
                     form.classList.add('was-validated');
                 }, false);
-            });
-        })();
+            }
+
+            // Validación Bootstrap personalizada para campos requeridos
+            (function () {
+                'use strict'
+
+                // Obtener todos los campos con la clase 'needs-validation'
+                const forms = document.querySelectorAll('.needs-validation');
+
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    // Remover el validador anterior si existe
+                    form.removeEventListener('submit', arguments.callee);
+
+                    form.addEventListener('submit', function (event) {
+                        //validador personalizado ya está manejando las contraseñas
+                        // Permitir que continúe con la validación nativa
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+        });
     </script>
 }

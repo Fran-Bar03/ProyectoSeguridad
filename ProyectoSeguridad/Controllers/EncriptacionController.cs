@@ -45,7 +45,7 @@ namespace ProyectoSeguridad.Controllers
             HttpContext.Response.Headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT";
             HttpContext.Response.Headers["Vary"] = "*";
 
-            // ===== NUEVO: LIMPIAR ESTADO COMPLETAMENTE =====
+            // LIMPIAR ESTADO COMPLETAMENTE 
             ModelState.Clear();
             ViewData.Clear();
             TempData.Clear();
@@ -184,7 +184,7 @@ namespace ProyectoSeguridad.Controllers
 
             ViewBag.UsuarioNombre = User.FindFirst("NombreCompleto")?.Value ?? User.Identity.Name;
 
-            // ===== NUEVO: Headers anti-caché =====
+            // Headers anti-caché 
             HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
 
             return View(desencriptarDto);
