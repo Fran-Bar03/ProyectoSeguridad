@@ -50,74 +50,80 @@ namespace Data.Services
             // ======================================================================
             // OBTENER INFORMACIÓN DEL DISPOSITIVO
             // ======================================================================
-            // Generar hash del User-Agent para verificar que el token se use
-            // en el mismo dispositivo/navegador donde se creó
             var currentUserAgentHash = UserAgentHelper.GetUserAgentHash(_httpContextAccessor.HttpContext);
-
-            // Detectar si es dispositivo móvil basado en el User-Agent
             var esDispositivoMovil = EsDispositivoMovil(_httpContextAccessor.HttpContext);
 
+            // ======================================================================
+            // OBTENER TIMESTAMP EN HORA DE HERMOSILLO
+            // ======================================================================
+            // Obtener la hora actual en Hermosillo
+            var hermosilloNow = TimeZoneHelper.NowInHermosillo();
+
+            // Convertir a UTC para el timestamp Unix
+            var hermosilloAsUtc = TimeZoneInfo.ConvertTimeToUtc(
+                hermosilloNow,
+                TimeZoneHelper.GetHermosilloTimeZone()
+            );
+
+            // Obtener timestamp Unix (en UTC)
+            var timestampHermosillo = new DateTimeOffset(hermosilloAsUtc).ToUnixTimeSeconds();
+
+            // Para debugging: obtener también timestamp UTC normal
+            var timestampUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             // ======================================================================
-            // CREAR CLAIMS (INFORMACIÓN DEL USUARIO Y DISPOSITIVO)
+            // CREAR CLAIMS CON TIMESTAMP CORRECTO
             // ======================================================================
-            // Los claims son fragmentos de información sobre el usuario
-            // Se incluyen en el token y pueden ser leídos posteriormente
             var claims = new List<Claim>
-            {
-                // Claims básicos del usuario
-                new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),    // ID unico del usuario
-                new Claim(ClaimTypes.Email, usuario.Email),                            // Email del usuario
-                new Claim(ClaimTypes.Name, usuario.Nombre),                            // Nombre del usuario
-                new Claim("NombreCompleto", $"{usuario.Nombre} {usuario.ApellidoPaterno} {usuario.ApellidoMaterno}"), // Nombre completo
-                
-                // Claims técnicos del token
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),     // ID unico del token
-                new Claim(JwtRegisteredClaimNames.Iat,
-                    DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),              // Fecha de creación
-                    ClaimValueTypes.Integer64),
-                
-                // Claims de seguridad para dispositivos móviles
-                new Claim("UserAgentHash", currentUserAgentHash), // Hash del dispositivo/navegador
-                new Claim("Dispositivo", esDispositivoMovil ? "mobile" : "desktop") // Tipo de dispositivo
-            };
-
+    {
+        // Claims básicos del usuario
+        new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+        new Claim(ClaimTypes.Email, usuario.Email),
+        new Claim(ClaimTypes.Name, usuario.Nombre),
+        new Claim("NombreCompleto", $"{usuario.Nombre} {usuario.ApellidoPaterno} {usuario.ApellidoMaterno}"),
+        
+        // Claims técnicos del token - USANDO TIMESTAMP DE HERMOSILLO
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(JwtRegisteredClaimNames.Iat,
+            timestampHermosillo.ToString(),  // Usar timestamp de Hermosillo
+            ClaimValueTypes.Integer64),
+        
+        // Información adicional para debug (opcional)
+        new Claim("TimeZone", "America/Hermosillo"),
+        new Claim("GeneratedAtLocal", hermosilloNow.ToString("yyyy-MM-ddTHH:mm:ss")),
+        
+        // Claims de seguridad para dispositivos móviles
+        new Claim("UserAgentHash", currentUserAgentHash),
+        new Claim("Dispositivo", esDispositivoMovil ? "mobile" : "desktop")
+    };
 
             // ======================================================================
-            // CONFIGURAR CLAVE DE FIRMA
+            // RESTANTE DEL CÓDIGO SIN CAMBIOS
             // ======================================================================
-            // Crear clave simetrica para firmar el token usando la clave secreta de la configuracion
-            // La firma asegura que el token no ha sido alterado
             var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 Environment.GetEnvironmentVariable("JWT__Key") ??
                 _configuration["Jwt:Key"] ??
                 throw new Exception("JWT Key no configurada")
             ));
 
-            // Crear credenciales de firma usando algoritmo HMAC-SHA256
             var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
-
-            // ======================================================================
-            // CREAR EL TOKEN JWT
-            // ======================================================================
             var token = new JwtSecurityToken(
                 issuer: Environment.GetEnvironmentVariable("JWT__Issuer") ??
-                        _configuration["Jwt:Issuer"] ?? "SecurityApp",      // Emisor del token
+                        _configuration["Jwt:Issuer"] ?? "SecurityApp",
                 audience: Environment.GetEnvironmentVariable("JWT__Audience") ??
-                         _configuration["Jwt:Audience"] ?? "SecurityUsers", // Audiencia destinataria
-                claims: claims,                            // Claims del usuario y dispositivo
-                expires: null,                             // Sin expiración (tokens indefinidos)
-                signingCredentials: credenciales);         // Credenciales de firma                          
+                         _configuration["Jwt:Audience"] ?? "SecurityUsers",
+                claims: claims,
+                expires: null, // Sin expiración
+                signingCredentials: credenciales);
 
+            // DEBUG: Log para verificar el timestamp
+            Console.WriteLine($"Token generado - Hermosillo: {hermosilloNow:HH:mm:ss}, " +
+                             $"Timestamp: {timestampHermosillo}, " +
+                             $"UTC: {DateTime.UtcNow:HH:mm:ss}");
 
-            // ======================================================================
-            // RETORNAR TOKEN COMO STRING
-            // ======================================================================
-            // Escribir el token como string para su uso en cookies y headers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
         /// <summary>
         /// Valida un token JWT y retorna el principal de claims si es válido.
