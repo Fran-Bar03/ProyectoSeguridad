@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Wm2tUsQrAHB7K8Yt2U1kconnVp1LP5ZwveYq7DTx2vg=",
+  "Hash": "uy8JNrl1VO5iaJbibjeHvCRIQ4eAvGhltUTL3ip29zM=",
   "Source": "ProyectoSeguridad",
   "BasePath": "_content/ProyectoSeguridad",
   "Mode": "Default",
@@ -57,6 +57,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\ProyectoSeguridad.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+      "SourceId": "ProyectoSeguridad",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\",
+      "BasePath": "_content/ProyectoSeguridad",
+      "RelativePath": "css/mobile-optimized#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "i092w4iwwp",
+      "Integrity": "ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\mobile-optimized.css"
     },
     {
       "Identity": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\site.css",
@@ -1320,6 +1341,88 @@
     }
   ],
   "Endpoints": [
+    {
+      "Route": "css/mobile-optimized.css",
+      "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3079"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
+        }
+      ]
+    },
+    {
+      "Route": "css/mobile-optimized.i092w4iwwp.css",
+      "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3079"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "i092w4iwwp"
+        },
+        {
+          "Name": "label",
+          "Value": "css/mobile-optimized.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
+        }
+      ]
+    },
     {
       "Route": "css/site.c2tiyv64ts.css",
       "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\site.css",

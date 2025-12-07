@@ -1,32 +1,75 @@
-﻿@{
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@{
     Layout = null;
+
+    var userAgent = Context.Request.Headers["User-Agent"].ToString();
+    var esDispositivoMovil = !string.IsNullOrEmpty(userAgent) && (
+        userAgent.ToLower().Contains("mobile") ||
+        userAgent.ToLower().Contains("android") ||
+        userAgent.ToLower().Contains("iphone") ||
+        userAgent.ToLower().Contains("ipad") ||
+        userAgent.ToLower().Contains("ipod") ||
+        userAgent.ToLower().Contains("blackberry") ||
+        userAgent.ToLower().Contains("windows phone") ||
+        userAgent.ToLower().Contains("webos") ||
+        userAgent.ToLower().Contains("opera mini") ||
+        userAgent.ToLower().Contains("iemobile") ||
+        userAgent.ToLower().Contains("kindle") ||
+        userAgent.ToLower().Contains("silk") ||
+        userAgent.ToLower().Contains("tablet") ||
+        userAgent.ToLower().Contains("touch")
+    );
+
+    var claseBody = esDispositivoMovil ? "dispositivo-movil" : "dispositivo-escritorio";
+    ViewBag.EsDispositivoMovil = esDispositivoMovil;
 }
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="@claseBody">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>@ViewData["Title"] - Sistema de Seguridad</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-    <!-- Bootstrap Icons -->
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="~/css/mobile-optimized.css" asp-append-version="true">
+
+    <!-- Estilos mínimos inline -->
     <style>
-        /* MÍNIMO CSS necesario para funcionalidad */
         .textarea-auto {
             min-height: 120px;
             resize: vertical;
         }
+
         .cursor-pointer {
             cursor: pointer;
         }
+
+        .btn-touch-friendly {
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-processing {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
     </style>
 </head>
-<body class="bg-light">
-    <!-- Navbar Responsive -->
+<body class="bg-light @claseBody">
+    <!-- NAVBAR RESPONSIVE -->
     <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" asp-controller="Account" asp-action="Login">
@@ -57,7 +100,6 @@
                                         <i class="bi bi-unlock-fill me-2"></i>Desencriptar
                                     </a>
                                 </li>
-
                                 <li>
                                     <a class="dropdown-item" asp-controller="Account" asp-action="VerToken">
                                         <i class="bi bi-shield-check me-2"></i>Ver Mi Token
@@ -93,7 +135,7 @@
         </div>
     </nav>
 
-    <!-- Mensajes de Estado -->
+    <!-- MENSAJES DE ESTADO -->
     <div class="container mt-3">
         @if (TempData["SuccessMessage"] != null)
         {
@@ -112,12 +154,12 @@
         }
     </div>
 
-    <!-- Contenido Principal -->
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="container py-4">
         @RenderBody()
     </main>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer class="bg-white border-top mt-auto py-3">
         <div class="container">
             <div class="row align-items-center">
@@ -138,63 +180,109 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- BIBLIOTECAS JAVASCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-    <!-- Scripts básicos -->
+    <!-- SCRIPTS PRINCIPALES -->
     <script>
-        // Función para copiar al portapapeles
+        // DETECCIÓN DE DISPOSITIVO MÓVIL EN CLIENTE
+        const esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (esDispositivoMovil) {
+            console.log('Dispositivo móvil detectado, aplicando optimizaciones...');
+
+            // Configuración para móviles
+            document.addEventListener('DOMContentLoaded', function() {
+                // Añadir clase de dispositivo móvil
+                document.body.classList.add('dispositivo-movil');
+
+                // Prevenir zoom automático en inputs
+                var viewport = document.querySelector('meta[name="viewport"]');
+                if (viewport) {
+                    viewport.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+                }
+
+                // Añadir atributos a inputs
+                document.querySelectorAll('input, textarea, select').forEach(function(element) {
+                    element.setAttribute('autocapitalize', 'off');
+                    element.setAttribute('autocorrect', 'off');
+                    element.setAttribute('spellcheck', 'false');
+                });
+            });
+
+            // Prevenir múltiples clics en formularios
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.disabled) {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('btn-processing');
+
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+
+                        setTimeout(() => {
+                            if (submitBtn.disabled) {
+                                submitBtn.disabled = false;
+                                submitBtn.classList.remove('btn-processing');
+                                submitBtn.innerHTML = originalText;
+                            }
+                        }, 10000);
+                    }
+                });
+            });
+        }
+
+        // FUNCIÓN PARA COPIAR AL PORTAPAPELES
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
-            const text = element.value || element.textContent;
+            if (!element) return;
+
+            const text = element.value || element.textContent || element.innerText;
 
             navigator.clipboard.writeText(text).then(() => {
-                // Mostrar tooltip de éxito
-                const btn = event.target;
-                const originalTitle = btn.getAttribute('data-bs-original-title') || btn.getAttribute('title') || '';
-                btn.setAttribute('data-bs-original-title', '¡Copiado!');
-                btn.setAttribute('title', '¡Copiado!');
+                if (esDispositivoMovil) {
+                    alert('¡Texto copiado!');
+                } else {
+                    const btn = event?.target;
+                    if (btn) {
+                        const originalTitle = btn.getAttribute('title') || '';
+                        btn.setAttribute('title', '¡Copiado!');
 
-                // Instanciar tooltip de Bootstrap
-                const tooltip = new bootstrap.Tooltip(btn, {
-                    title: '¡Copiado!',
-                    trigger: 'manual'
-                });
-                tooltip.show();
-
-                setTimeout(() => {
-                    tooltip.hide();
-                    btn.setAttribute('data-bs-original-title', originalTitle);
-                    btn.setAttribute('title', originalTitle);
-                }, 1500);
-
+                        setTimeout(() => {
+                            btn.setAttribute('title', originalTitle);
+                        }, 1500);
+                    }
+                }
             }).catch(err => {
                 console.error('Error al copiar:', err);
                 alert('No se pudo copiar el texto');
             });
         }
 
-        // Auto-resize textareas
-        document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
+        // AUTO-RESIZE TEXTAREAS
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('textarea').forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
             });
         });
 
-        // Confirmar logout
+        // CONFIRMAR LOGOUT
         document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
             if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                 e.preventDefault();
             }
         });
 
-        // Inicializar tooltips de Bootstrap
+        // INICIALIZAR TOOLTIPS
         document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

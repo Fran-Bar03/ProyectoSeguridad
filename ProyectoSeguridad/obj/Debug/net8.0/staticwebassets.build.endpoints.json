@@ -85,6 +85,88 @@
       ]
     },
     {
+      "Route": "css/mobile-optimized.css",
+      "AssetFile": "css/mobile-optimized.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3079"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
+        }
+      ]
+    },
+    {
+      "Route": "css/mobile-optimized.i092w4iwwp.css",
+      "AssetFile": "css/mobile-optimized.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3079"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "i092w4iwwp"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
+        },
+        {
+          "Name": "label",
+          "Value": "css/mobile-optimized.css"
+        }
+      ]
+    },
+    {
       "Route": "css/site.c2tiyv64ts.css",
       "AssetFile": "css/site.css",
       "Selectors": [],

@@ -2,15 +2,80 @@
 
 namespace Data.Middleware
 {
+    /// <summary>
+    /// Middleware para agregar headers de seguridad HTTP
+    /// Protege contra ataques comunes y mejora la seguridad de la aplicación
+    /// MODIFICADO: Ahora incluye headers específicos para dispositivos móviles
+    /// </summary>
     public class SecurityHeadersMiddleware
     {
         private readonly RequestDelegate _next;
 
+        /// <summary>
+        /// Constructor del middleware de headers de seguridad
+        /// </summary>
+        /// <param name="next">Siguiente middleware en el pipeline</param>
         public SecurityHeadersMiddleware(RequestDelegate next) => _next = next;
 
+        /// <summary>
+        /// Método invocado para cada request
+        /// Agrega headers de seguridad según el tipo de contenido y dispositivo
+        /// MODIFICADO: Headers específicos para dispositivos móviles y mejor CSP
+        /// </summary>
+        /// <param name="context">Contexto HTTP actual</param>
+        /// <returns>Tarea asíncrona</returns>
         public async Task Invoke(HttpContext context)
         {
             var path = context.Request.Path.ToString().ToLowerInvariant();
+
+            // ======================================================================
+            // DETECCIÓN DE DISPOSITIVO MÓVIL
+            // ======================================================================
+            // Obtener User-Agent para determinar tipo de dispositivo
+            var userAgent = context.Request.Headers["User-Agent"].ToString();
+            var esDispositivoMovil = EsDispositivoMovil(userAgent);
+
+            // ======================================================================
+            // HEADERS DE SEGURIDAD ESPECÍFICOS PARA DISPOSITIVOS MÓVILES
+            // ======================================================================
+            if (esDispositivoMovil)
+            {
+                // -----------------------------------------------------------
+                // X-Content-Type-Options: Prevenir MIME type sniffing
+                // -----------------------------------------------------------
+                // En móviles, es crucial prevenir que navegadores "adivinen" tipos de contenido
+                // Previene ataques donde archivos maliciosos se disfrazan de inofensivos
+                context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+
+                // -----------------------------------------------------------
+                // X-Permitted-Cross-Domain-Policies: Controlar políticas entre dominios
+                // -----------------------------------------------------------
+                // Especialmente importante para móviles que pueden cargar contenido cruzado
+                // Bloquea políticas que permiten carga de contenido desde otros dominios
+                context.Response.Headers["X-Permitted-Cross-Domain-Policies"] = "none";
+
+                // -----------------------------------------------------------
+                // Content-Security-Policy (CSP) MEJORADO PARA MÓVILES
+                // -----------------------------------------------------------
+                // Política de seguridad de contenido más estricta para dispositivos móviles
+                // Previene ataques XSS (Cross-Site Scripting) e inyección de contenido
+                context.Response.Headers["Content-Security-Policy"] =
+                    "default-src 'self'; " +                    // Por defecto, solo contenido propio
+                    "script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " + // Scripts permitidos
+                    "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " +  // Estilos permitidos
+                    "img-src 'self' data: https:; " +          // Imágenes desde self, data URLs y HTTPS
+                    "font-src 'self' https://cdn.jsdelivr.net; " + // Fuentes permitidas
+                    "connect-src 'self'; " +                   // Conexiones (AJAX) solo a self
+                    "frame-ancestors 'none';";                 // No permitir iframes
+
+                // -----------------------------------------------------------
+                // Permissions-Policy (antes Feature-Policy)
+                // -----------------------------------------------------------
+                // Controla qué APIs del navegador pueden usarse
+                // Importante para móviles con sensores y hardware especial
+                context.Response.Headers["Permissions-Policy"] =
+                    "camera=(), microphone=(), geolocation=(), payment=()";
+            }
 
             // ===========================================
             // HEADERS GENERALES: ¿PARA QUÉ SIRVEN?
@@ -119,6 +184,33 @@ namespace Data.Middleware
             context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 
             await _next(context);
+        }
+
+        // ======================================================================
+        // FUNCIÓN AUXILIAR PARA DETECTAR DISPOSITIVOS MÓVILES
+        // ======================================================================
+        /// <summary>
+        /// Detecta si el User-Agent corresponde a un dispositivo móvil o tablet
+        /// </summary>
+        /// <param name="userAgent">Cadena User-Agent del navegador</param>
+        /// <returns>True si es dispositivo móvil o tablet, False si es escritorio</returns>
+        private bool EsDispositivoMovil(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+                return false;
+
+            var userAgentLower = userAgent.ToLower();
+
+            // Lista de dispositivos móviles y tablets
+            var dispositivosMoviles = new[]
+            {
+                "mobile", "android", "iphone", "ipad", "ipod",
+                "blackberry", "windows phone", "webos", "opera mini",
+                "iemobile", "kindle", "silk", "tablet", "touch"
+            };
+
+            return dispositivosMoviles.Any(dispositivo =>
+                userAgentLower.Contains(dispositivo));
         }
     }
 }

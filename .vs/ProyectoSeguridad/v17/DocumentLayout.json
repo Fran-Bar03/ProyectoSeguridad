@@ -3,20 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\middleware\\jwtmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\middleware\\jwtmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\middleware\\securityheadersmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\middleware\\securityheadersmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6148D77E-E190-42AE-B5D1-9289B6767064}|DTOs\\DTOs.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\dtos\\inicio\\tokeninfoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6148D77E-E190-42AE-B5D1-9289B6767064}|DTOs\\DTOs.csproj|solutionrelative:dtos\\inicio\\tokeninfoviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\wwwroot\\css\\mobile-optimized.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\wwwroot\\css\\mobile-optimized.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\data\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{20CBAB0E-773E-4E22-8C75-1F23C77A13D0}|Data\\Data.csproj|solutionrelative:data\\services\\encryptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\views\\encriptacion\\encriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\views\\encriptacion\\encriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\views\\encriptacion\\desencriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\views\\encriptacion\\desencriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|c:\\users\\hachi\\source\\repos\\proyectoseguridad\\proyectoseguridad\\views\\encriptacion\\encriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{03B02389-37FF-4F74-BAEB-B7DFCE273BEF}|ProyectoSeguridad\\ProyectoSeguridad.csproj|solutionrelative:proyectoseguridad\\views\\encriptacion\\encriptar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,58 +54,146 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "EncryptionService.cs",
-              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
-              "RelativeDocumentMoniker": "Data\\Services\\EncryptionService.cs",
-              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
-              "RelativeToolTip": "Data\\Services\\EncryptionService.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAiwHQAAAAlAAAAAAAAAA==",
+              "Title": "SecurityHeadersMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\SecurityHeadersMiddleware.cs",
+              "RelativeDocumentMoniker": "Data\\Middleware\\SecurityHeadersMiddleware.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\SecurityHeadersMiddleware.cs",
+              "RelativeToolTip": "Data\\Middleware\\SecurityHeadersMiddleware.cs",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAqwNcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-06T08:54:43.794Z",
+              "WhenOpened": "2025-12-06T17:45:45.14Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Desencriptar.cshtml",
-              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
-              "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
-              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
-              "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
-              "ViewState": "AgIAALEBAAAAAAAAAAAAAK4BAABTAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-06T07:09:16.311Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Encriptar.cshtml",
-              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
-              "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
-              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
-              "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
-              "ViewState": "AgIAAG8BAAAAAAAAAAAAAI8CAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-06T07:09:03.038Z",
+              "Title": "JwtService.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\JwtService.cs",
+              "RelativeDocumentMoniker": "Data\\Services\\JwtService.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\JwtService.cs",
+              "RelativeToolTip": "Data\\Services\\JwtService.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAqwMkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T17:45:32.838Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "JwtMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\JwtMiddleware.cs",
+              "RelativeDocumentMoniker": "Data\\Middleware\\JwtMiddleware.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Middleware\\JwtMiddleware.cs",
+              "RelativeToolTip": "Data\\Middleware\\JwtMiddleware.cs",
+              "ViewState": "AgIAANQAAAAAAAAAAAAqwPMAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T17:45:23.291Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EncryptionService.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
+              "RelativeDocumentMoniker": "Data\\Services\\EncryptionService.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\Data\\Services\\EncryptionService.cs",
+              "RelativeToolTip": "Data\\Services\\EncryptionService.cs",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAAALIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T08:54:43.794Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Desencriptar.cshtml",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
+              "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Desencriptar.cshtml",
+              "ViewState": "AgIAALcBAAAAAAAAAAAAAOoBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T07:09:16.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Encriptar.cshtml",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
+              "RelativeToolTip": "ProyectoSeguridad\\Views\\Encriptacion\\Encriptar.cshtml",
+              "ViewState": "AgIAAFwCAAAAAAAAAAAAAI8CAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T07:09:03.038Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Program.cs",
               "RelativeDocumentMoniker": "ProyectoSeguridad\\Program.cs",
               "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Program.cs",
               "RelativeToolTip": "ProyectoSeguridad\\Program.cs",
-              "ViewState": "AgIAAGYAAAAAAAAAAAAAANYAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAqwCgBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-06T07:08:25.116Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "ProyectoSeguridad\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAPQAAAAAAAAAAAAAACcBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T17:46:49.531Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "mobile-optimized.css",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+              "RelativeToolTip": "ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAIwIkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-12-06T17:56:41.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TokenInfoViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\DTOs\\Inicio\\TokenInfoViewModel.cs",
+              "RelativeDocumentMoniker": "DTOs\\Inicio\\TokenInfoViewModel.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\DTOs\\Inicio\\TokenInfoViewModel.cs",
+              "RelativeToolTip": "DTOs\\Inicio\\TokenInfoViewModel.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAC8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T17:46:21.627Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "ProyectoSeguridad\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "ProyectoSeguridad\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAADUCAAAAAAAAAAAQwFQCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T17:46:07.565Z"
             }
           ]
         }
