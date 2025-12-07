@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "uy8JNrl1VO5iaJbibjeHvCRIQ4eAvGhltUTL3ip29zM=",
+  "Hash": "ZaDoEstkJhP75uGCvbJcBlQZkedT/Qfs3Uc0NHCcG7M=",
   "Source": "ProyectoSeguridad",
   "BasePath": "_content/ProyectoSeguridad",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "i092w4iwwp",
-      "Integrity": "ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=",
+      "Fingerprint": "3r8b2a0bt1",
+      "Integrity": "8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\mobile-optimized.css"
@@ -1342,6 +1342,51 @@
   ],
   "Endpoints": [
     {
+      "Route": "css/mobile-optimized.3r8b2a0bt1.css",
+      "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 07 Dec 2025 08:44:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3r8b2a0bt1"
+        },
+        {
+          "Name": "label",
+          "Value": "css/mobile-optimized.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U="
+        }
+      ]
+    },
+    {
       "Route": "css/mobile-optimized.css",
       "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
       "Selectors": [],
@@ -1352,7 +1397,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "3079"
+          "Value": "3"
         },
         {
           "Name": "Content-Type",
@@ -1360,11 +1405,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
+          "Value": "\"8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
+          "Value": "Sun, 07 Dec 2025 08:44:13 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1374,52 +1419,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
-        }
-      ]
-    },
-    {
-      "Route": "css/mobile-optimized.i092w4iwwp.css",
-      "AssetFile": "C:\\Users\\Hachi\\source\\repos\\ProyectoSeguridad\\ProyectoSeguridad\\wwwroot\\css\\mobile-optimized.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "3079"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 06 Dec 2025 17:56:54 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "i092w4iwwp"
-        },
-        {
-          "Name": "label",
-          "Value": "css/mobile-optimized.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-ImrLch7bAocPfctvnXBp4iUVRnHY7VPx8vspmY1Gtic="
+          "Value": "sha256-8ZRc1sGeVrPBx4lD717BgRaQekyh78QKV9SKsdt638U="
         }
       ]
     },

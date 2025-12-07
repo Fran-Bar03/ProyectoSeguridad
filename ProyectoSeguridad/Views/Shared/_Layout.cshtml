@@ -1,60 +1,27 @@
 ﻿@inject IHttpContextAccessor HttpContextAccessor
 @{
     Layout = null;
-
-    var userAgent = Context.Request.Headers["User-Agent"].ToString();
-    var esDispositivoMovil = !string.IsNullOrEmpty(userAgent) && (
-        userAgent.ToLower().Contains("mobile") ||
-        userAgent.ToLower().Contains("android") ||
-        userAgent.ToLower().Contains("iphone") ||
-        userAgent.ToLower().Contains("ipad") ||
-        userAgent.ToLower().Contains("ipod") ||
-        userAgent.ToLower().Contains("blackberry") ||
-        userAgent.ToLower().Contains("windows phone") ||
-        userAgent.ToLower().Contains("webos") ||
-        userAgent.ToLower().Contains("opera mini") ||
-        userAgent.ToLower().Contains("iemobile") ||
-        userAgent.ToLower().Contains("kindle") ||
-        userAgent.ToLower().Contains("silk") ||
-        userAgent.ToLower().Contains("tablet") ||
-        userAgent.ToLower().Contains("touch")
-    );
-
-    var claseBody = esDispositivoMovil ? "dispositivo-movil" : "dispositivo-escritorio";
-    ViewBag.EsDispositivoMovil = esDispositivoMovil;
 }
 
 <!DOCTYPE html>
-<html lang="es" class="@claseBody">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="theme-color" content="#0d6efd">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Sistema de Seguridad</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-    <!-- CSS personalizado -->
-    <link rel="stylesheet" href="~/css/mobile-optimized.css" asp-append-version="true">
-
-    <!-- Estilos mínimos inline -->
+    <!-- CSS personalizado mínimo -->
     <style>
-        .textarea-auto {
-            min-height: 120px;
-            resize: vertical;
+        /* Solo estilos esenciales */
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.15rem;
         }
 
-        .cursor-pointer {
-            cursor: pointer;
-        }
-
-        .btn-touch-friendly {
+        .btn-touch {
             min-height: 44px;
             min-width: 44px;
             display: inline-flex;
@@ -62,46 +29,81 @@
             justify-content: center;
         }
 
-        .btn-processing {
-            opacity: 0.7;
-            cursor: not-allowed;
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Mejorar experiencia en móviles */
+        @@media (max-width: 768px) {
+            .container, .container-fluid {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .card-body {
+                padding: 1rem !important;
+            }
+
+            .btn-lg {
+                padding: 0.75rem 1rem !important;
+                font-size: 1rem !important;
+            }
+
+            .navbar-nav .nav-link {
+                padding: 0.5rem 1rem;
+            }
+
+            footer .text-md-end {
+                text-align: center !important;
+                margin-top: 0.5rem;
+            }
         }
     </style>
+
+    @RenderSection("Styles", required: false)
 </head>
-<body class="bg-light @claseBody">
-    <!-- NAVBAR RESPONSIVE -->
-    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm">
+<body class="bg-light">
+    <!-- Navbar Responsive -->
+    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" asp-controller="Account" asp-action="Login">
-                <i class="bi bi-shield-lock-fill me-2"></i>SecureEncrypt
+            <a class="navbar-brand fw-bold text-primary d-flex align-items-center" asp-controller="Account" asp-action="Login">
+                <i class="bi bi-shield-lock-fill me-2"></i>
+                <span class="d-none d-sm-inline">SecureEncrypt</span>
+                <span class="d-inline d-sm-none">SE</span>
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle me-1"></i>
-                                @User.FindFirst("NombreCompleto")?.Value
+                            <a class="nav-link dropdown-toggle d-flex align-items-center btn-touch" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span class="d-none d-md-inline">
+                                    @User.FindFirst("NombreCompleto")?.Value
+                                </span>
+                                <span class="d-inline d-md-none">Cuenta</span>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Encriptacion" asp-action="Encriptar">
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Encriptacion" asp-action="Encriptar">
                                         <i class="bi bi-lock-fill me-2"></i>Encriptar
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Encriptacion" asp-action="Desencriptar">
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Encriptacion" asp-action="Desencriptar">
                                         <i class="bi bi-unlock-fill me-2"></i>Desencriptar
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="VerToken">
+                                    <a class="dropdown-item d-flex align-items-center" asp-controller="Account" asp-action="VerToken">
                                         <i class="bi bi-shield-check me-2"></i>Ver Mi Token
                                     </a>
                                 </li>
@@ -109,7 +111,7 @@
                                 <li>
                                     <form asp-controller="Account" asp-action="LogOut" method="post" id="logoutForm">
                                         @Html.AntiForgeryToken()
-                                        <button type="submit" class="dropdown-item text-danger">
+                                        <button type="submit" class="dropdown-item text-danger d-flex align-items-center w-100">
                                             <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
                                         </button>
                                     </form>
@@ -120,13 +122,15 @@
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">
-                                <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+                            <a class="nav-link d-flex align-items-center btn-touch" asp-controller="Account" asp-action="Login">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                <span>Iniciar Sesión</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Registro">
-                                <i class="bi bi-person-plus-fill me-1"></i>Registrarse
+                            <a class="nav-link d-flex align-items-center btn-touch" asp-controller="Account" asp-action="Registro">
+                                <i class="bi bi-person-plus-fill me-2"></i>
+                                <span>Registrarse</span>
                             </a>
                         </li>
                     }
@@ -135,158 +139,83 @@
         </div>
     </nav>
 
-    <!-- MENSAJES DE ESTADO -->
+    <!-- Mensajes de Estado -->
     <div class="container mt-3">
         @if (TempData["SuccessMessage"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <div class="flex-grow-1">@TempData["SuccessMessage"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
 
         @if (TempData["ErrorMessage"] != null)
         {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <div class="flex-grow-1">@TempData["ErrorMessage"]</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- Contenido Principal -->
     <main class="container py-4">
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-top mt-auto py-3">
+    <!-- Footer Responsive -->
+    <footer class="bg-white border-top mt-auto py-4">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6">
-                    <span class="text-muted">
-                        <i class="bi bi-shield-check me-1"></i>
+                <div class="col-12 col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-muted d-flex align-items-center justify-content-center justify-content-md-start">
+                        <i class="bi bi-shield-check me-2"></i>
                         Sistema de Seguridad &copy; @DateTime.Now.Year
                     </span>
                 </div>
-                <div class="col-md-6 text-md-end">
+                <div class="col-12 col-md-6 text-center text-md-end">
                     <small class="text-muted">
-                        <i class="bi bi-lock-fill me-1"></i>AES-256 |
-                        <i class="bi bi-key-fill me-1"></i>JWT |
-                        <i class="bi bi-hash me-1"></i>BCrypt
+                        <span class="d-block d-md-inline mb-1 mb-md-0">
+                            <i class="bi bi-lock-fill me-1"></i>AES-256
+                        </span>
+                        <span class="d-none d-md-inline mx-2">|</span>
+                        <span class="d-block d-md-inline mb-1 mb-md-0">
+                            <i class="bi bi-key-fill me-1"></i>JWT
+                        </span>
+                        <span class="d-none d-md-inline mx-2">|</span>
+                        <span class="d-block d-md-inline">
+                            <i class="bi bi-hash me-1"></i>BCrypt
+                        </span>
                     </small>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- BIBLIOTECAS JAVASCRIPT -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-    <!-- SCRIPTS PRINCIPALES -->
+    <!-- Scripts básicos -->
     <script>
-        // DETECCIÓN DE DISPOSITIVO MÓVIL EN CLIENTE
-        const esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        if (esDispositivoMovil) {
-            console.log('Dispositivo móvil detectado, aplicando optimizaciones...');
-
-            // Configuración para móviles
-            document.addEventListener('DOMContentLoaded', function() {
-                // Añadir clase de dispositivo móvil
-                document.body.classList.add('dispositivo-movil');
-
-                // Prevenir zoom automático en inputs
-                var viewport = document.querySelector('meta[name="viewport"]');
-                if (viewport) {
-                    viewport.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
-                }
-
-                // Añadir atributos a inputs
-                document.querySelectorAll('input, textarea, select').forEach(function(element) {
-                    element.setAttribute('autocapitalize', 'off');
-                    element.setAttribute('autocorrect', 'off');
-                    element.setAttribute('spellcheck', 'false');
-                });
-            });
-
-            // Prevenir múltiples clics en formularios
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    if (submitBtn && !submitBtn.disabled) {
-                        submitBtn.disabled = true;
-                        submitBtn.classList.add('btn-processing');
-
-                        const originalText = submitBtn.innerHTML;
-                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
-
-                        setTimeout(() => {
-                            if (submitBtn.disabled) {
-                                submitBtn.disabled = false;
-                                submitBtn.classList.remove('btn-processing');
-                                submitBtn.innerHTML = originalText;
-                            }
-                        }, 10000);
-                    }
-                });
-            });
-        }
-
-        // FUNCIÓN PARA COPIAR AL PORTAPAPELES
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-
-            const text = element.value || element.textContent || element.innerText;
-
-            navigator.clipboard.writeText(text).then(() => {
-                if (esDispositivoMovil) {
-                    alert('¡Texto copiado!');
-                } else {
-                    const btn = event?.target;
-                    if (btn) {
-                        const originalTitle = btn.getAttribute('title') || '';
-                        btn.setAttribute('title', '¡Copiado!');
-
-                        setTimeout(() => {
-                            btn.setAttribute('title', originalTitle);
-                        }, 1500);
-                    }
-                }
-            }).catch(err => {
-                console.error('Error al copiar:', err);
-                alert('No se pudo copiar el texto');
-            });
-        }
-
-        // AUTO-RESIZE TEXTAREAS
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('textarea').forEach(textarea => {
-                textarea.addEventListener('input', function() {
-                    this.style.height = 'auto';
-                    this.style.height = (this.scrollHeight) + 'px';
-                });
-                textarea.style.height = 'auto';
-                textarea.style.height = (textarea.scrollHeight) + 'px';
-            });
-        });
-
-        // CONFIRMAR LOGOUT
+        // Confirmar logout
         document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
             if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) {
                 e.preventDefault();
             }
         });
 
-        // INICIALIZAR TOOLTIPS
+        // Auto-resize textareas
         document.addEventListener('DOMContentLoaded', function() {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+            document.querySelectorAll('textarea').forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+                // Trigger inicial
+                textarea.dispatchEvent(new Event('input'));
             });
         });
     </script>
