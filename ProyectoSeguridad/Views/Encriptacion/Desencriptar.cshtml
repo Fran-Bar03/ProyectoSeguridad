@@ -124,7 +124,7 @@
                                           style="font-family: 'Courier New', monospace;">@Model.MensajeOriginal</textarea>
                                 <button type="button"
                                         class="btn btn-outline-secondary d-flex align-items-center justify-content-center"
-                                        onclick="copiarResultado()">
+                                        id="btnCopiarResultado">
                                     <i class="bi bi-clipboard me-2"></i>
                                     <span>Copiar</span>
                                 </button>
@@ -138,11 +138,11 @@
                                 @if (Model.Exito)
                                 {
                                     <strong>¡Éxito! El mensaje se desencriptó correctamente.</strong>
-                                            }
+                                }
                                 else
                                 {
                                     <strong>Error: No se pudo desencriptar el mensaje</strong>
-                                            }
+                                }
                             </div>
                         </div>
 
@@ -315,29 +315,28 @@
             window.location.href = '@Url.Action("Desencriptar")';
         }
 
-        // Función para copiar resultado
+        // Función para copiar resultado (CORREGIDA)
         async function copiarResultado() {
             const texto = document.getElementById('mensajeOriginal').value;
 
             try {
                 await navigator.clipboard.writeText(texto);
 
-                // Cambiar botón temporalmente
-                const button = event.target.closest('button');
-                if (button) {
-                    const originalHTML = button.innerHTML;
-                    button.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡Copiado!';
-                    button.classList.remove('btn-outline-secondary');
-                    button.classList.add('btn-success');
+                // Obtener el botón por ID
+                const botonCopiar = document.getElementById('btnCopiarResultado');
+                if (botonCopiar) {
+                    const originalHTML = botonCopiar.innerHTML;
+                    botonCopiar.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡Copiado!';
+                    botonCopiar.classList.remove('btn-outline-secondary');
+                    botonCopiar.classList.add('btn-success');
 
                     setTimeout(() => {
-                        button.innerHTML = originalHTML;
-                        button.classList.remove('btn-success');
-                        button.classList.add('btn-outline-secondary');
+                        botonCopiar.innerHTML = originalHTML;
+                        botonCopiar.classList.remove('btn-success');
+                        botonCopiar.classList.add('btn-outline-secondary');
                     }, 2000);
                 }
 
-                // Mostrar notificación
                 mostrarNotificacion('Mensaje copiado al portapapeles', 'success');
             } catch (err) {
                 console.error('Error al copiar:', err);
@@ -366,6 +365,12 @@
 
         // Inicialización cuando el DOM está listo
         document.addEventListener('DOMContentLoaded', function() {
+            // Configurar botón de copiar (event listener)
+            const botonCopiar = document.getElementById('btnCopiarResultado');
+            if (botonCopiar) {
+                botonCopiar.addEventListener('click', copiarResultado);
+            }
+
             // Deshabilitar doble clic en formulario
             const form = document.getElementById('desencriptarForm');
             const submitBtn = document.getElementById('btnDesencriptar');
