@@ -21,7 +21,7 @@ if (builder.Environment.IsDevelopment()) // SOLO LOCAL
     if (File.Exists(secretPath))
     {
         builder.Configuration.AddJsonFile(secretPath, optional: false, reloadOnChange: true);
-        Console.WriteLine("✓ secrets.json cargado (desarrollo local)");
+        Console.WriteLine("secrets.json cargado (desarrollo local)");
     }
 }
 
@@ -36,83 +36,121 @@ Console.WriteLine($"PORT: {Environment.GetEnvironmentVariable("PORT") ?? "8080 (
 var tieneRailway = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
 var tieneLocal = !string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]);
 
-Console.WriteLine($"Railway configurado: {(tieneRailway ? "SÍ" : "NO")}");
-Console.WriteLine($"Local configurado: {(tieneLocal ? "SÍ" : "NO")}");
+Console.WriteLine($"Railway configurado: {(tieneRailway ? "SI" : "NO")}");
+Console.WriteLine($"Local configurado: {(tieneLocal ? "SI" : "NO")}");
 
 // ======================================================================
-// CONFIGURAR RATE LIMITING PROTECCIÓN CONTRA ABUSO/DDoS
+// CONFIGURAR RATE LIMITING PROTECCIÓN CONTRA ATAQUES MASIVOS
 // ======================================================================
-// Protege contra ataques de fuerza bruta y abuso en endpoints críticos
-// Limita: 15 peticiones por minuto por IP, 10 para encriptación/desencriptación
-// MODIFICADO: Ahora detecta dispositivos móviles y aplica límites específicos
+// Protege contra scripts automatizados que simulan múltiples usuarios
+// Límites muy estrictos para endpoints críticos (login, registro, encriptación)
 builder.Services.AddRateLimiter(options =>
 {
-    // Límite global por dirección IP y tipo de dispositivo
+    // Límite global por dirección IP con detección de scripts
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
     {
         // Obtener IP del cliente (o "unknown" si no se puede determinar)
         var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
-        // Obtener User-Agent para detectar tipo de dispositivo
+        // Obtener User-Agent para detectar scripts automatizados
         var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
         var esDispositivoMovil = EsDispositivoMovil(userAgent);
+        var esScriptAutomatizado = EsUserAgentDeScript(userAgent);
 
         var ruta = httpContext.Request.Path.ToString().ToLowerInvariant();
+        var metodo = httpContext.Request.Method;
 
-        // Límites más estrictos para operaciones de encriptación/desencriptación (POST)
-        // MODIFICADO: Límites diferentes para móviles vs escritorio
-        if (ruta.Contains("/encriptacion") && httpContext.Request.Method == "POST")
+        // DETECCIÓN Y BLOQUEO DE SCRIPTS AUTOMATIZADOS
+        // Si detecta User-Agent de script conocido, bloqueo total
+        if (esScriptAutomatizado)
         {
-            // Para móviles: límite más bajo (8 por minuto)
-            // Para escritorio: límite normal (10 por minuto)
-            var partitionKey = esDispositivoMovil ?
-                $"{ipAddress}_mobile_encriptacion" :
-                $"{ipAddress}_desktop_encriptacion";
-
+            // Bloqueo total por 30 minutos para scripts detectados
             return RateLimitPartition.GetFixedWindowLimiter(
-                partitionKey: partitionKey,
+                partitionKey: $"BLOQUEO_SCRIPT_{ipAddress}",
                 factory: partition => new FixedWindowRateLimiterOptions
                 {
-                    AutoReplenishment = true,          // Recarga automática de límites
-                    PermitLimit = esDispositivoMovil ? 8 : 10, // Límites específicos por dispositivo
-                    Window = TimeSpan.FromMinutes(1),  // Ventana de 1 minuto
-                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst, // Procesar en orden
-                    QueueLimit = esDispositivoMovil ? 1 : 2 // Cola más pequeña para móviles
+                    AutoReplenishment = true,
+                    PermitLimit = 1, // Solo 1 petición permitida
+                    Window = TimeSpan.FromMinutes(30), // Bloqueo por 30 minutos
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0 // Sin cola, rechazar inmediatamente
+                });
+        }
+
+        // PROTECCIÓN EXTREMA PARA LOGIN Y REGISTRO (POST)
+        // Estos endpoints son objetivos comunes de ataques de fuerza bruta
+        if ((ruta.Contains("/account/login") || ruta.Contains("/account/registro")) && metodo == "POST")
+        {
+            // Límite muy estricto: solo 3 intentos por minuto por IP
+            return RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: $"{ipAddress}_CRITICO_AUTENTICACION",
+                factory: partition => new FixedWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,
+                    PermitLimit = 3, // Solo 3 intentos por minuto
+                    Window = TimeSpan.FromMinutes(1),
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0 // Sin cola
+                });
+        }
+
+        // PROTECCIÓN PARA OPERACIONES DE ENCRIPTACIÓN/DESENCRIPTACIÓN (POST)
+        // Estas operaciones son costosas en recursos
+        if (ruta.Contains("/encriptacion") && metodo == "POST")
+        {
+            // Token bucket limiter para control más fino
+            return RateLimitPartition.GetTokenBucketLimiter(
+                partitionKey: $"{ipAddress}_ENCRIPTACION",
+                factory: partition => new TokenBucketRateLimiterOptions
+                {
+                    TokenLimit = 5, // Máximo 5 tokens
+                    TokensPerPeriod = 1, // Recarga 1 token cada 30 segundos
+                    ReplenishmentPeriod = TimeSpan.FromSeconds(30),
+                    AutoReplenishment = true,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                    QueueLimit = 0 // Sin cola
                 });
         }
 
         // Límite general para todas las demás rutas
-        // MODIFICADO: Límites ajustados según tipo de dispositivo
+        // Más estricto que antes para prevenir ataques DDoS
         return RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: $"{ipAddress}_{(esDispositivoMovil ? "mobile" : "desktop")}",
+            partitionKey: $"{ipAddress}_GENERAL",
             factory: partition => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
-                PermitLimit = esDispositivoMovil ? 12 : 15, // Móviles: 12, Escritorio: 15
+                PermitLimit = 20, // 20 peticiones por minuto (reducido de 30)
                 Window = TimeSpan.FromMinutes(1),
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = esDispositivoMovil ? 2 : 3 // Cola más pequeña para móviles
+                QueueLimit = 2 // Cola pequeña
             });
     });
 
     // Configurar respuesta personalizada para errores 429 (Too Many Requests)
-    // MODIFICADO: Mensajes diferentes para dispositivos móviles
+    // Mensaje especial para scripts detectados
     options.OnRejected = async (context, token) =>
     {
         // Detectar si es dispositivo móvil
         var userAgent = context.HttpContext.Request.Headers["User-Agent"].ToString();
-        var esDispositivoMovil = EsDispositivoMovil(userAgent);
+        var esScriptAutomatizado = EsUserAgentDeScript(userAgent);
 
         context.HttpContext.Response.StatusCode = 429; // Status Code 429: Too Many Requests
 
-        var message = esDispositivoMovil
-            ? "⚠️ Demasiadas peticiones desde tu dispositivo móvil. Espera un minuto."
-            : "⚠️ Demasiadas peticiones. Por favor, espera un minuto.";
+        // Mensajes diferentes según el tipo de detección
+        string message;
+        if (esScriptAutomatizado)
+        {
+            message = "ACTIVIDAD AUTOMATIZADA DETECTADA. Acceso bloqueado por seguridad.";
+        }
+        else
+        {
+            message = "Demasiadas peticiones. Por favor, espera un minuto.";
+        }
 
         await context.HttpContext.Response.WriteAsync(message, cancellationToken: token);
     };
 
-    Console.WriteLine("✓ Rate Limiting configurado: 10 encriptaciones/min (escritorio), 8 (móviles), 15 peticiones/min (escritorio), 12 (móviles)");
+    Console.WriteLine("Rate Limiting configurado con proteccion anti-scripts: 3 login/min, 20 peticiones/min");
 });
 
 // ======================================================================
@@ -144,7 +182,6 @@ builder.Services.AddScoped<IEncryptionService, EncryptionService>();
 // Registramos el servicio JWT de dos formas:
 // Como interfaz IJwtService (para controladores)
 // Como clase concreta JwtService (para middleware)
-// MODIFICADO: Ahora incluye información de dispositivo móvil en los tokens
 builder.Services.AddScoped<IJwtService, JwtService>(sp =>
     new JwtService(
         sp.GetRequiredService<IConfiguration>(),
@@ -239,7 +276,6 @@ app.UseRouting();
 app.UseRateLimiter();
 
 // Middleware personalizado: Headers de seguridad
-// incluye headers específicos para dispositivos móviles
 app.UseMiddleware<SecurityHeadersMiddleware>();
 
 // Habilitar autenticación y autorización
@@ -247,7 +283,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Middleware personalizado: Validar JWT en cada petición
-// detecta y maneja dispositivos móviles
 app.UseMiddleware<JwtMiddleware>();
 
 // Configurar rutas por defecto (MVC)
@@ -262,7 +297,7 @@ app.MapControllerRoute(
 if (Environment.GetEnvironmentVariable("PORT") != null)
 {
     var port = Environment.GetEnvironmentVariable("PORT");
-    Console.WriteLine($"✓ Railway detectado - Puerto: {port}");
+    Console.WriteLine($"Railway detectado - Puerto: {port}");
 }
 
 // Iniciar la aplicación
@@ -294,4 +329,98 @@ static bool EsDispositivoMovil(string userAgent)
 
     return dispositivosMoviles.Any(dispositivo =>
         userAgentLower.Contains(dispositivo));
+}
+
+// ======================================================================
+// FUNCIÓN NUEVA: DETECTAR SCRIPTS AUTOMATIZADOS
+// ======================================================================
+/// <summary>
+/// Detecta si el User-Agent corresponde a un script automatizado o bot
+/// Basado en patrones comunes de herramientas de automatización, hacking y scraping
+/// </summary>
+/// <param name="userAgent">Cadena User-Agent del navegador/cliente</param>
+/// <returns>True si es script automatizado, False si es navegador legítimo</returns>
+static bool EsUserAgentDeScript(string userAgent)
+{
+    if (string.IsNullOrEmpty(userAgent))
+        return true; // Sin User-Agent = sospechoso
+
+    var userAgentLower = userAgent.ToLower();
+
+    // ======================================================================
+    // PERMITIR NAVEGADORES COMUNES (INCLUYENDO LOCALHOST)
+    // ======================================================================
+    var navegadoresPermitidos = new[]
+    {
+        // Firefox y derivados
+        "mozilla", "firefox", "gecko",
+        
+        // Chrome/Chromium y derivados
+        "chrome", "chromium", "crios", "brave", "vivaldi",
+        "edge", "edg", "opera", "opr", "safari",
+        
+        // Safari y WebKit
+        "safari", "webkit", "applewebkit",
+        
+        // Internet Explorer
+        "msie", "trident",
+        
+        // Móviles
+        "mobile", "android", "iphone", "ipad",
+        
+        // Testing local
+        "postmanruntime", "insomnia", "thunder client",
+        "swagger", "openapi"
+    };
+
+    // Si es un navegador conocido, NO es script
+    foreach (var navegador in navegadoresPermitidos)
+    {
+        if (userAgentLower.Contains(navegador))
+        {
+            Console.WriteLine($"✅ Navegador permitido: {navegador}");
+            return false; // NO es script
+        }
+    }
+
+    // ======================================================================
+    // SOLO BLOQUEAR HERRAMIENTAS DE ATAQUE REALES
+    // ======================================================================
+    var herramientasAtaque = new[]
+    {
+        // Herramientas de hacking específicas
+        "sqlmap", "nikto", "hydra", "medusa", "patator",
+        "brutus", "dirb", "gobuster", "ffuf", "wfuzz",
+        "arjun", "xsstrike", "commix", "wapiti",
+        
+        // Network scanners maliciosos
+        "masscan", "zmap", "unicornscan",
+        
+        // Fuerza bruta específica
+        "john the ripper", "hashcat", "rainbowcrack",
+        
+        // Scripts personalizados maliciosos
+        "attackbot", "hackbot", "exploit",
+        "vulnerability scanner", "security scanner",
+        
+        // Muy sospechosos
+        @"^\d+\.\d+\.\d+\.\d+$", // Solo IP
+        @"^.{1,5}$", // Muy corto
+        @"<script", "javascript:", "onload=", // Inyección
+    };
+
+    foreach (var herramienta in herramientasAtaque)
+    {
+        if (System.Text.RegularExpressions.Regex.IsMatch(userAgentLower, herramienta))
+        {
+            Console.WriteLine($"⚠️ Herramienta de ataque detectada: {herramienta}");
+            return true;
+        }
+    }
+
+    // ======================================================================
+    // POR DEFECTO: PERMITIR (mejor permitir falso negativo que bloquear usuario)
+    // ======================================================================
+    Console.WriteLine($"ℹ️ User-Agent no reconocido pero PERMITIDO: {userAgent}");
+    return false;
 }

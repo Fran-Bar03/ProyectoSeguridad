@@ -5,7 +5,7 @@ namespace Data.Middleware
     /// <summary>
     /// Middleware para agregar headers de seguridad HTTP
     /// Protege contra ataques comunes y mejora la seguridad de la aplicación
-    /// MODIFICADO: Ahora incluye headers específicos para dispositivos móviles
+    /// MODIFICADO: Headers mejorados contra web scraping y automatización
     /// </summary>
     public class SecurityHeadersMiddleware
     {
@@ -20,7 +20,7 @@ namespace Data.Middleware
         /// <summary>
         /// Método invocado para cada request
         /// Agrega headers de seguridad según el tipo de contenido y dispositivo
-        /// MODIFICADO: Headers específicos para dispositivos móviles y mejor CSP
+        /// MODIFICADO: Headers específicos contra scraping y automatización
         /// </summary>
         /// <param name="context">Contexto HTTP actual</param>
         /// <returns>Tarea asíncrona</returns>
@@ -36,46 +36,80 @@ namespace Data.Middleware
             var esDispositivoMovil = EsDispositivoMovil(userAgent);
 
             // ======================================================================
-            // HEADERS DE SEGURIDAD ESPECÍFICOS PARA DISPOSITIVOS MÓVILES
+            // HEADERS DE SEGURIDAD ESPECÍFICOS CONTRA AUTOMATIZACIÓN
             // ======================================================================
-            if (esDispositivoMovil)
-            {
-                // -----------------------------------------------------------
-                // X-Content-Type-Options: Prevenir MIME type sniffing
-                // -----------------------------------------------------------
-                // En móviles, es crucial prevenir que navegadores "adivinen" tipos de contenido
-                // Previene ataques donde archivos maliciosos se disfrazan de inofensivos
-                context.Response.Headers["X-Content-Type-Options"] = "nosniff";
 
-                // -----------------------------------------------------------
-                // X-Permitted-Cross-Domain-Policies: Controlar políticas entre dominios
-                // -----------------------------------------------------------
-                // Especialmente importante para móviles que pueden cargar contenido cruzado
-                // Bloquea políticas que permiten carga de contenido desde otros dominios
-                context.Response.Headers["X-Permitted-Cross-Domain-Policies"] = "none";
+            // -----------------------------------------------------------
+            // X-Robots-Tag: Control de indexación por motores de búsqueda
+            // -----------------------------------------------------------
+            // Previene que contenido sensible sea indexado por buscadores
+            // También desalienta a bots/scrapers automatizados
+            context.Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet, noimageindex";
 
-                // -----------------------------------------------------------
-                // Content-Security-Policy (CSP) MEJORADO PARA MÓVILES
-                // -----------------------------------------------------------
-                // Política de seguridad de contenido más estricta para dispositivos móviles
-                // Previene ataques XSS (Cross-Site Scripting) e inyección de contenido
-                context.Response.Headers["Content-Security-Policy"] =
-                    "default-src 'self'; " +                    // Por defecto, solo contenido propio
-                    "script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " + // Scripts permitidos
-                    "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " +  // Estilos permitidos
-                    "img-src 'self' data: https:; " +          // Imágenes desde self, data URLs y HTTPS
-                    "font-src 'self' https://cdn.jsdelivr.net; " + // Fuentes permitidas
-                    "connect-src 'self'; " +                   // Conexiones (AJAX) solo a self
-                    "frame-ancestors 'none';";                 // No permitir iframes
+            // -----------------------------------------------------------
+            // X-Content-Type-Options: Prevenir MIME type sniffing
+            // -----------------------------------------------------------
+            // En móviles, es crucial prevenir que navegadores "adivinen" tipos de contenido
+            // Previene ataques donde archivos maliciosos se disfrazan de inofensivos
+            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
 
-                // -----------------------------------------------------------
-                // Permissions-Policy (antes Feature-Policy)
-                // -----------------------------------------------------------
-                // Controla qué APIs del navegador pueden usarse
-                // Importante para móviles con sensores y hardware especial
-                context.Response.Headers["Permissions-Policy"] =
-                    "camera=(), microphone=(), geolocation=(), payment=()";
-            }
+            // -----------------------------------------------------------
+            // X-Permitted-Cross-Domain-Policies: Controlar políticas entre dominios
+            // -----------------------------------------------------------
+            // Especialmente importante para móviles que pueden cargar contenido cruzado
+            // Bloquea políticas que permiten carga de contenido desde otros dominios
+            context.Response.Headers["X-Permitted-Cross-Domain-Policies"] = "none";
+
+            // -----------------------------------------------------------
+            // Content-Security-Policy (CSP) MEJORADO PARA SEGURIDAD
+            // -----------------------------------------------------------
+            // Política de seguridad de contenido más estricta
+            // Previene ataques XSS (Cross-Site Scripting) e inyección de contenido
+            var cspHeader = "default-src 'self'; " +                    // Por defecto, solo contenido propio
+                           "script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " + // Scripts permitidos
+                           "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; " +  // Estilos permitidos
+                           "img-src 'self' data: https:; " +          // Imágenes desde self, data URLs y HTTPS
+                           "font-src 'self' https://cdn.jsdelivr.net; " + // Fuentes permitidas
+                           "connect-src 'self'; " +                   // Conexiones (AJAX) solo a self
+                           "frame-ancestors 'none';" +                 // No permitir iframes
+                           "object-src 'none'; " +                    // No objetos embebidos
+                           "media-src 'self'; " +                     // Media solo desde self
+                           "worker-src 'none'; " +                    // No workers
+                           "manifest-src 'self';";                    // Manifest solo desde self
+
+            context.Response.Headers["Content-Security-Policy"] = cspHeader;
+
+            // -----------------------------------------------------------
+            // Permissions-Policy (antes Feature-Policy)
+            // -----------------------------------------------------------
+            // Controla qué APIs del navegador pueden usarse
+            // Importante para móviles con sensores y hardware especial
+            context.Response.Headers["Permissions-Policy"] =
+                "camera=(), microphone=(), geolocation=(), payment=(), usb=(), " +
+                "gyroscope=(), accelerometer=(), magnetometer=(), " +
+                "picture-in-picture=(), display-capture=(), " +
+                "fullscreen=(self)";
+
+            // -----------------------------------------------------------
+            // Referrer-Policy: Control de información de referencia
+            // -----------------------------------------------------------
+            // Controla qué información envía el navegador al cambiar de página
+            // strict-origin-when-cross-origin: 
+            // - Misma página: envía toda la URL
+            // - Página diferente: solo envía origen (no ruta completa)
+            context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+
+            // -----------------------------------------------------------
+            // X-DNS-Prefetch-Control: Control de prefetch DNS
+            // -----------------------------------------------------------
+            // Previene prefetch DNS que podría revelar patrones de uso
+            context.Response.Headers["X-DNS-Prefetch-Control"] = "off";
+
+            // -----------------------------------------------------------
+            // HEADER PERSONALIZADO CONTRA SCRAPING
+            // -----------------------------------------------------------
+            // Header personalizado que indica políticas anti-scraping
+            context.Response.Headers["X-Anti-Scraping"] = "enabled";
 
             // ===========================================
             // HEADERS GENERALES: ¿PARA QUÉ SIRVEN?
@@ -155,7 +189,7 @@ namespace Data.Middleware
             }
 
             // ===========================================
-            // HEADERS DE SEGURIDAD GENERALES
+            // HEADERS DE SEGURIDAD GENERALES OBLIGATORIOS
             // ===========================================
             // Se aplican a TODAS las páginas siempre
 
@@ -173,15 +207,6 @@ namespace Data.Middleware
             // Activa el filtro contra scripts maliciosos en Chrome/IE
             // mode=block: Si detecta XSS, bloquea toda la página
             context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
-
-            // -----------------------------------------------------------
-            // Referrer-Policy: Control de información de referencia
-            // -----------------------------------------------------------
-            // Controla qué información envía el navegador al cambiar de página
-            // strict-origin-when-cross-origin: 
-            // - Misma página: envía toda la URL
-            // - Página diferente: solo envía origen (no ruta completa)
-            context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 
             await _next(context);
         }

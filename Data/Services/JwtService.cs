@@ -75,7 +75,7 @@ namespace Data.Services
             // CREAR CLAIMS CON TIMESTAMP CORRECTO
             // ======================================================================
             var claims = new List<Claim>
-    {
+        {
         // Claims básicos del usuario
         new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
         new Claim(ClaimTypes.Email, usuario.Email),
@@ -95,7 +95,7 @@ namespace Data.Services
         // Claims de seguridad para dispositivos móviles
         new Claim("UserAgentHash", currentUserAgentHash),
         new Claim("Dispositivo", esDispositivoMovil ? "mobile" : "desktop")
-    };
+        };
 
             // ======================================================================
             // RESTANTE DEL CÓDIGO SIN CAMBIOS

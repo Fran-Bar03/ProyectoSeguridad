@@ -16,7 +16,7 @@ namespace Data.Middleware
     /// Middleware personalizado para validar automáticamente tokens JWT en cada request.
     /// Este middleware se ejecuta en el pipeline HTTP y verifica la autenticación antes de
     /// que las requests lleguen a los controladores.
-    /// MODIFICADO: Ahora detecta y maneja dispositivos móviles y tablets
+    /// MODIFICADO: Ahora incluye detección temprana de scripts automatizados
     /// </summary>
     public class JwtMiddleware
     {
@@ -29,10 +29,10 @@ namespace Data.Middleware
         public JwtMiddleware(RequestDelegate next) => _next = next;
 
 
-        ///<summary>
+        /// <summary>
         /// Metodo invocado por el pipeline de ASP.NET Core para cada request
         /// Valida el token Jwt, establece el usuario en el contexto y maneja redirecciones
-        /// MODIFICADO: Ahora incluye detección de dispositivos móviles y validación específica
+        /// MODIFICADO: Incluye detección temprana y bloqueo de scripts automatizados
         /// </summary>
         /// <param name="context">Contexto HTTP actual</param>
         /// <param name="jwtService">Servicio JWT inyectado por DI</param>
@@ -41,14 +41,42 @@ namespace Data.Middleware
         public async Task Invoke(HttpContext context, JwtService jwtService)
         {
             // ======================================================================
-            // DETECCIÓN DE DISPOSITIVO MÓVIL
+            // DETECCIÓN TEMPRANA DE SCRIPTS AUTOMATIZADOS - PRIMERA LINEA DE DEFENSA
             // ======================================================================
-            // Obtener User-Agent para determinar tipo de dispositivo
+            // Antes de procesar cualquier petición, verificar si es un script de ataque
             var userAgent = context.Request.Headers["User-Agent"].ToString();
+
+            // Verificar si el User-Agent corresponde a un script de ataque conocido
+            if (EsScriptDeAtaque(userAgent))
+            {
+                // LOG DETALLADO PARA MONITOREO DE ATAQUES
+                var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "IP_DESCONOCIDA";
+                Console.WriteLine($"BLOQUEO INMEDIATO DE SCRIPT: IP={ipAddress}, UserAgent={userAgent}");
+
+                // Respuesta que simula éxito pero bloquea el acceso
+                // Esto confunde a los scripts automatizados
+                context.Response.StatusCode = 403; // Forbidden
+                await context.Response.WriteAsync(@"
+                <html>
+                <head>
+                    <title>Acceso Denegado</title>
+                    <meta name='robots' content='noindex,nofollow'>
+                </head>
+                <body>
+                    <!-- Acceso bloqueado por seguridad -->
+                </body>
+                </html>");
+
+                // DETENER el pipeline aquí - no procesar más esta petición
+                return;
+            }
+
+            // ======================================================================
+            // DETECCIÓN DE DISPOSITIVO MÓVIL (código existente)
+            // ======================================================================
             var esDispositivoMovil = EsDispositivoMovil(userAgent);
 
             // Guardar información del dispositivo en el contexto para uso posterior
-            // Los controladores y servicios pueden acceder a esta información
             context.Items["EsDispositivoMovil"] = esDispositivoMovil;
             context.Items["UserAgent"] = userAgent;
 
@@ -249,7 +277,6 @@ namespace Data.Middleware
             var userAgentLower = userAgent.ToLower();
 
             // Lista de dispositivos móviles y tablets
-            // Incluye smartphones (Android, iPhone), tablets (iPad, Kindle) y navegadores móviles
             var dispositivosMoviles = new[]
             {
                 "mobile", "android", "iphone", "ipad", "ipod",
@@ -259,6 +286,190 @@ namespace Data.Middleware
 
             return dispositivosMoviles.Any(dispositivo =>
                 userAgentLower.Contains(dispositivo));
+        }
+
+        // ======================================================================
+        // FUNCIÓN NUEVA: DETECTAR SCRIPTS DE ATAQUE ESPECÍFICOS
+        // ======================================================================
+        /// <summary>
+        /// Detecta scripts específicos de ataque masivo (como el que recibiste)
+        /// Basado en patrones específicos de herramientas de automatización masiva
+        /// </summary>
+        /// <param name="userAgent">Cadena User-Agent a analizar</param>
+        /// <returns>True si es script de ataque, False si es legítimo</returns>
+        private bool EsScriptDeAtaque(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+                return true; // Sin User-Agent = muy sospechoso
+
+            var userAgentLower = userAgent.ToLower();
+
+            // Permitir User-Agents locales comunes
+            if (userAgentLower.Contains("localhost") ||
+                userAgentLower.Contains("127.0.0.1") ||
+                userAgentLower.Contains("::1"))
+            {
+                Console.WriteLine($"User-Agent local permitido: {userAgent}");
+                return false;
+            }
+
+            // ======================================================================
+            // LISTA COMPLETA DE NAVEGADORES PERMITIDOS (ACTUALIZADA)
+            // ======================================================================
+            var navegadoresPermitidos = new[]
+            {
+        // Firefox y derivados
+        "mozilla", "firefox", "gecko", "seamonkey", "waterfox",
+        "librewolf", "tor browser", "palemoon", "basilisk",
+        
+        // Chrome/Chromium y derivados
+        "chrome", "chromium", "crios", "brave", "vivaldi",
+        "edgechromium", "edg", "edga", "edgios", "whale",
+        "samsungbrowser", "opera", "opr", "yandexbrowser",
+        "uc browser", "maxthon", "qqbrowser", "duckduckgo",
+        
+        // Safari y WebKit
+        "safari", "webkit", "applewebkit", "version",
+        
+        // Internet Explorer y antiguos
+        "msie", "trident", "iemobile", "internet explorer",
+        
+        // Navegadores móviles
+        "mobile", "android", "iphone", "ipad", "ipod",
+        "windows phone", "blackberry", "webos", "kindle",
+        "playbook", "series", "smarttv", "tv", "tablet",
+        
+        // Headless browsers (usados en testing)
+        "headlesschrome", "phantomjs", "slimerjs",
+        
+        // Herramientas de desarrollo/testing
+        "postmanruntime", "insomnia", "thunder client",
+        "swagger", "openapi", "restclient", "httpclient",
+        "fiddler", "charles", "paw",
+        
+        // Bots legítimos (motores de búsqueda)
+        "googlebot", "bingbot", "slurp", "duckduckbot",
+        "baiduspider", "yandexbot", "facebookexternalhit",
+        "twitterbot", "linkedinbot", "telegrambot",
+        "discordbot", "slackbot", "whatsapp",
+        
+        // Monitores y herramientas legítimas
+        "uptimerobot", "pingdom", "newrelic", "datadog",
+        "statuscake", "site24x7", "gtmetrix", "pagespeed",
+        
+        // Librerías HTTP legítimas
+        "okhttp", "axios", "fetch", "got", "request",
+        "unirest", "superagent", "node-fetch",
+        
+        // Otros permitidos
+        "electron", "nwjs", "cef", "webview"
+    };
+
+            // Verificar si es un navegador/h herramienta permitida
+            foreach (var navegador in navegadoresPermitidos)
+            {
+                if (userAgentLower.Contains(navegador))
+                {
+                    Console.WriteLine($"✅ Navegador/herramienta permitida detectada: '{navegador}'");
+                    return false; // NO es script de ataque
+                }
+            }
+
+            // ======================================================================
+            // PATRONES DE SCRIPTS DE ATAQUE (SOLO ESTOS SERÁN BLOQUEADOS)
+            // ======================================================================
+            var patronesAtaqueMasivo = new[]
+            {
+        // Herramientas de hacking/ataque específicas
+        "sqlmap", "nikto", "nmap", "hydra", "medusa",
+        "patator", "brutus", "dirb", "gobuster", "ffuf",
+        "wfuzz", "arjun", "xsstrike", "commix", "wapiti",
+        "skipfish", "w3af", "zap", "burpsuite", "nessus",
+        "openvas", "acunetix", "netsparker", "appscan",
+        "arachni", "vega", "skipfish",
+        
+        // Network scanners maliciosos
+        "masscan", "zmap", "zgrab", "unicornscan",
+        "angry ip scanner", "advanced port scanner",
+        
+        // Scrapers maliciosos (no legítimos)
+        "scrapy/1.", "scrapy/2.", "scrapy/0.",
+        "beautifulsoup", "lxml", "htmlparser",
+        "mechanize", "goutte", "simplehtmldom",
+        
+        // Fuerza bruta específica
+        "john the ripper", "hashcat", "ophcrack",
+        "rainbowcrack", "cain and abel",
+        
+        // Scripts personalizados maliciosos
+        "custom script", "mybot", "autobot", "attackbot",
+        "hackbot", "exploit", "vulnerability scanner",
+        "security scanner", "penetration test",
+        
+        // Sin User-Agent o claramente falsos
+        "", "default", "unknown", "test", "fake",
+        "dummy", "placeholder", "example", "sample",
+        
+        // Patrones numéricos de ataque masivo
+        @"^user\d+$", @"^test\d+$", @"^client\d+$",
+        @"^bot\d+$", @"^scan\d+$", @"^attack\d+$",
+        
+        // IP como User-Agent
+        @"^\d+\.\d+\.\d+\.\d+$",
+        
+        // Caracteres especiales/inyección
+        @"<script", @"javascript:", @"onload=",
+        @"onerror=", @"onclick=", @"alert\(",
+        @"document\.", @"window\.", @"eval\(",
+        
+        // Muy cortos y sospechosos
+        @"^.{1,5}$" // 1-5 caracteres solamente
+    };
+
+            foreach (var patron in patronesAtaqueMasivo)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(userAgentLower, patron))
+                {
+                    Console.WriteLine($" SCRIPT DE ATAQUE DETECTADO: '{patron}'");
+                    Console.WriteLine($"   User-Agent completo: {userAgent}");
+                    return true; // BLOQUEAR
+                }
+            }
+
+            // ======================================================================
+            // DETECCIÓN AVANZADA POR COMPORTAMIENTO
+            // ======================================================================
+
+            // User-Agent demasiado largo (posible inyección)
+            if (userAgent.Length > 1000)
+            {
+                Console.WriteLine($" User-Agent demasiado largo ({userAgent.Length} chars) - posible inyección");
+                return true;
+            }
+
+            // Solo números y puntos (posible IP o versión)
+            if (System.Text.RegularExpressions.Regex.IsMatch(userAgent, @"^[\d\.]+$"))
+            {
+                Console.WriteLine($" User-Agent solo con números/puntos: {userAgent}");
+                return true;
+            }
+
+            // Solo letras repetidas
+            if (System.Text.RegularExpressions.Regex.IsMatch(userAgent, @"^(.)\1+$"))
+            {
+                Console.WriteLine($" User-Agent con letras repetidas: {userAgent}");
+                return true;
+            }
+
+            // ======================================================================
+            // SI LLEGA AQUÍ, ES PROBABLEMENTE UN CLIENTE DESCONOCIDO PERTO NO MALICIOSO
+            // ======================================================================
+            Console.WriteLine($" User-Agent no reconocido pero PERMITIDO: {userAgent}");
+            Console.WriteLine($"   Longitud: {userAgent.Length}");
+            Console.WriteLine($"   Contiene navegadores conocidos: {navegadoresPermitidos.Any(n => userAgentLower.Contains(n))}");
+
+            // Por defecto: PERMITIR (mejor permitir un falso negativo que bloquear usuario legítimo)
+            return false;
         }
     }
 }

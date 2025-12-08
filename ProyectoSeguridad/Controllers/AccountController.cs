@@ -123,10 +123,35 @@ namespace ProyectoSeguridad.Controllers
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             // ======================================================================
+            // PROTECCIÓN AVANZADA CONTRA SCRIPTS DE ATAQUE MASIVO
+            // ======================================================================
+            // Obtener información del cliente para detección de patrones de ataque
+            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            // DETECCIÓN TEMPRANA DE PATRONES DE ATAQUE MASIVO
+            // Verificar si esta petición tiene características de script automatizado
+            if (DetectarPatronDeAtaqueMasivo(userAgent, ipAddress, loginDto.Email))
+            {
+                // Log detallado del intento de ataque
+                _logger.LogWarning("INTENTO DE ATAQUE MASIVO DETECTADO - IP: {IpAddress}, UserAgent: {UserAgent}, Email: {Email}",
+                    ipAddress, userAgent, loginDto.Email);
+
+                // Aplicar retraso artificial para ralentizar scripts automatizados
+                // Esto hace que los ataques masivos sean mucho más lentos y costosos
+                await Task.Delay(3000); // 3 segundos de retraso
+
+                // Mensaje genérico (no revelar información específica sobre el bloqueo)
+                // Esto evita que los atacantes adapten sus scripts
+                ModelState.AddModelError("", "Error de autenticación. Por favor, intenta nuevamente.");
+
+                return View(loginDto);
+            }
+
+            // ======================================================================
             // DETECCIÓN DE DISPOSITIVO MÓVIL
             // ======================================================================
             // Obtener User-Agent para determinar tipo de dispositivo
-            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
             var esDispositivoMovil = EsDispositivoMovil(userAgent);
 
             // Guardar información en ViewBag para uso en la vista si hay errores
@@ -140,15 +165,9 @@ namespace ProyectoSeguridad.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Intento de login con modelo invalido desde dispositivo: {Dispositivo}",
-                    esDispositivoMovil ? "móvil" : "escritorio");
+                    esDispositivoMovil ? "movil" : "escritorio");
                 return View(loginDto);
             }
-
-            // ======================================================================
-            // OBTENER INFORMACIÓN DEL CLIENTE
-            // ======================================================================
-            // Obtener la IP del cliente para proteccion contra ataques de fuerza bruta
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
             // ======================================================================
             // VALIDAR CREDENCIALES
@@ -162,7 +181,6 @@ namespace ProyectoSeguridad.Controllers
                 // GENERAR TOKEN JWT
                 // ======================================================================
                 // Generar token JWT para el usuario autenticado
-                // El token ahora incluye información del dispositivo
                 var token = _jwtService.GenerarJwtToken(usuario);
 
                 // ======================================================================
@@ -198,7 +216,7 @@ namespace ProyectoSeguridad.Controllers
                 // LOG Y REDIRECCIÓN
                 // ======================================================================
                 _logger.LogInformation("Login exitoso para usuario: {Email} desde dispositivo: {Dispositivo}",
-                    loginDto.Email, esDispositivoMovil ? "móvil" : "escritorio");
+                    loginDto.Email, esDispositivoMovil ? "movil" : "escritorio");
 
                 TempData["SuccessMessage"] = message;
 
@@ -216,13 +234,11 @@ namespace ProyectoSeguridad.Controllers
             // ======================================================================
             // Si el login falla, mostrar error en el formulario
             _logger.LogWarning("Login fallido para usuario: {Email} desde dispositivo: {Dispositivo}",
-                loginDto.Email, esDispositivoMovil ? "móvil" : "escritorio");
+                loginDto.Email, esDispositivoMovil ? "movil" : "escritorio");
 
             ModelState.AddModelError("", message);
             return View(loginDto);
-
         }
-
 
 
         /// <summary>
@@ -565,14 +581,268 @@ namespace ProyectoSeguridad.Controllers
             };
         }
 
-        // ======================================================================
-        // FUNCIÓN PARA DETECTAR DISPOSITIVOS MÓVILES
-        // ======================================================================
+
+        /// <summary>
+        /// Detecta patrones de ataque masivo basados en User-Agent, IP y email
+        /// Específico para scripts que simulan múltiples usuarios
+        /// </summary>
+        private bool DetectarPatronDeAtaqueMasivo(string userAgent, string ipAddress, string email)
+        {
+            // 1. DETECCIÓN POR USER-AGENT
+            // Verificar si el User-Agent corresponde a herramientas de automatización
+            if (EsUserAgentDeScript(userAgent))
+            {
+                return true;
+            }
+
+            // 2. DETECCIÓN POR PATRÓN DE EMAIL
+            // Scripts de ataque a menudo usan patrones predecibles en emails
+            if (EsEmailDeAtaque(email))
+            {
+                return true;
+            }
+
+            // 3. DETECCIÓN POR IP
+            // Verificar si la IP proviene de rangos conocidos de hosting/VPS
+            // (los atacantes a menudo usan servidores cloud para ataques)
+            if (EsIPDeHosting(ipAddress))
+            {
+                return true;
+            }
+
+            // 4. DETECCIÓN POR PATRONES CONJUNTOS
+            // Combinaciones específicas que indican ataque automatizado
+
+            // User-Agent muy corto + email con números secuenciales
+            if (userAgent.Length < 15 && ContieneNumerosSecuenciales(email))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Detecta patrones de registro automatizado
+        /// </summary>
+        private bool DetectarPatronRegistroAutomatizado(string userAgent, string ipAddress, string email, string nombre)
+        {
+            // 1. Nombres genéricos o secuenciales
+            var nombresGenericos = new[] { "test", "user", "admin", "demo", "guest" };
+            if (nombresGenericos.Any(n => nombre.ToLower().Contains(n)))
+            {
+                return true;
+            }
+
+            // 2. Emails con patrones de ataque
+            if (EsEmailDeAtaque(email))
+            {
+                return true;
+            }
+
+            // 3. Múltiples registros desde misma IP en poco tiempo
+            // (Esto requeriría tracking en cache/sesión, implementación básica)
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verifica si un email tiene características de ataque automatizado
+        /// </summary>
+        private bool EsEmailDeAtaque(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            var emailLower = email.ToLower();
+
+            // Patrones comunes en emails de scripts de ataque
+            var patronesAtaque = new[]
+            {
+                // Emails de prueba/secuenciales
+                @"^test\d*@", @"^user\d*@", @"^admin\d*@",
+                @"^demo\d*@", @"^guest\d*@",
+                
+                // Solo números
+                @"^\d+@",
+                
+                // Dominios de prueba
+                @"@example\.com$", @"@test\.com$", @"@demo\.com$",
+                @"@fake\.com$", @"@dummy\.com$",
+                
+                // Patrones secuenciales
+                @"\d{3,}@", // Muchos números al inicio
+                @"@\d+\.\d+" // IP como dominio
+            };
+
+            foreach (var patron in patronesAtaque)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(emailLower, patron))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verifica si una IP pertenece a rangos de hosting/VPS
+        /// </summary>
+        private bool EsIPDeHosting(string ipAddress)
+        {
+            if (string.IsNullOrEmpty(ipAddress))
+                return false;
+
+            // Rangos de IPs comunes en servicios cloud/VPS
+            var rangosHosting = new[]
+            {
+                "192.0.2.", // TEST-NET (usado en ejemplos)
+                "198.51.100.", // TEST-NET-2
+                "203.0.113.", // TEST-NET-3
+                "10.", // Redes privadas
+                "172.16.", "172.17.", "172.18.", "172.19.",
+                "172.20.", "172.21.", "172.22.", "172.23.",
+                "172.24.", "172.25.", "172.26.", "172.27.",
+                "172.28.", "172.29.", "172.30.", "172.31.",
+                "192.168.", // Redes privadas
+                "100.64.", "100.65.", "100.66.", "100.67.", // CG-NAT
+                "100.68.", "100.69.", "100.70.", "100.71.",
+                "169.254.", // Link-local
+                
+                // Algunos rangos de proveedores cloud (ejemplos)
+                "34.", "35.", "104.", "108.", "130.", "140.",
+                "142.", "144.", "146.", "148.", "150.", "152.",
+                "154.", "156.", "158.", "160.", "162.", "164.",
+                "185.", "188.", "192.", "194.", "195.", "198.",
+                "200.", "202.", "204.", "206.", "208.", "210."
+            };
+
+            return rangosHosting.Any(rango => ipAddress.StartsWith(rango));
+        }
+
+        /// <summary>
+        /// Verifica si un string contiene números secuenciales
+        /// </summary>
+        private bool ContieneNumerosSecuenciales(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return false;
+
+            // Buscar patrones como user1, user2, user3, etc.
+            var match = System.Text.RegularExpressions.Regex.Match(input, @"(\d{2,})");
+            if (match.Success)
+            {
+                // Verificar si el número es "redondo" o secuencial típico
+                var numero = match.Value;
+                if (numero.All(char.IsDigit))
+                {
+                    int num;
+                    if (int.TryParse(numero, out num))
+                    {
+                        // Números como 01, 02, 03 o 001, 002, 003
+                        if (num <= 100 && numero.Length >= 2)
+                            return true;
+
+                        // Números redondos (10, 20, 30, etc.)
+                        if (num % 10 == 0 && num <= 1000)
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Detecta si el User-Agent corresponde a un script automatizado
+        /// Versión simplificada de la función en Program.cs
+        /// </summary>
+        private bool EsUserAgentDeScript(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+                return true; // Sin User-Agent = sospechoso
+
+            var userAgentLower = userAgent.ToLower();
+
+            // ======================================================================
+            // PERMITIR NAVEGADORES COMUNES (INCLUYENDO LOCALHOST)
+            // ======================================================================
+            var navegadoresPermitidos = new[]
+            {
+        // Firefox y derivados
+        "mozilla", "firefox", "gecko",
+        
+        // Chrome/Chromium y derivados
+        "chrome", "chromium", "crios", "brave", "vivaldi",
+        "edge", "edg", "opera", "opr", "safari",
+        
+        // Safari y WebKit
+        "safari", "webkit", "applewebkit",
+        
+        // Internet Explorer
+        "msie", "trident",
+        
+        // Móviles
+        "mobile", "android", "iphone", "ipad",
+        
+        // Testing local
+        "postmanruntime", "insomnia", "thunder client",
+        "swagger", "openapi"
+    };
+
+            // Si es un navegador conocido, NO es script
+            foreach (var navegador in navegadoresPermitidos)
+            {
+                if (userAgentLower.Contains(navegador))
+                {
+                    return false; // NO es script
+                }
+            }
+
+            // ======================================================================
+            // SOLO BLOQUEAR HERRAMIENTAS DE ATAQUE REALES
+            // ======================================================================
+            var herramientasAtaque = new[]
+            {
+        // Herramientas de hacking específicas
+        "sqlmap", "nikto", "hydra", "medusa", "patator",
+        "brutus", "dirb", "gobuster", "ffuf", "wfuzz",
+        "arjun", "xsstrike", "commix", "wapiti",
+        
+        // Network scanners maliciosos
+        "masscan", "zmap", "unicornscan",
+        
+        // Fuerza bruta específica
+        "john the ripper", "hashcat", "rainbowcrack",
+        
+        // Scripts personalizados maliciosos
+        "attackbot", "hackbot", "exploit",
+        "vulnerability scanner", "security scanner",
+        
+        // Muy sospechosos
+        @"^\d+\.\d+\.\d+\.\d+$", // Solo IP
+        @"^.{1,5}$", // Muy corto
+        @"<script", "javascript:", "onload=", // Inyección
+    };
+
+            foreach (var herramienta in herramientasAtaque)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(userAgentLower, herramienta))
+                {
+                    return true;
+                }
+            }
+
+            // ======================================================================
+            // POR DEFECTO: PERMITIR (mejor permitir falso negativo que bloquear usuario)
+            // ======================================================================
+            return false;
+        }
+
         /// <summary>
         /// Detecta si el User-Agent corresponde a un dispositivo móvil o tablet
         /// </summary>
-        /// <param name="userAgent">Cadena User-Agent del navegador</param>
-        /// <returns>True si es dispositivo móvil o tablet, False si es escritorio</returns>
         private bool EsDispositivoMovil(string userAgent)
         {
             if (string.IsNullOrEmpty(userAgent))
@@ -591,7 +861,7 @@ namespace ProyectoSeguridad.Controllers
             return dispositivosMoviles.Any(dispositivo =>
                 userAgentLower.Contains(dispositivo));
         }
-
-
     }
 }
+
+
